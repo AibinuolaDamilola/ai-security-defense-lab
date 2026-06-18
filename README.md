@@ -61,14 +61,6 @@ The application utilizes sidebar conditional selectboxes to seamlessly pivot acr
 
 ---
 
-## ⚔️ The Week 13 Unguided Gauntlet: LogiChain AI
-
-At the start of Month 4, all step-by-step guidance, lab instructions, and vulnerability hints are stripped away. You are handed an undocumented, raw architectural system description of a new startup: **LogiChain AI** (a global autonomous drone shipping coordinator).
-
-You have exactly **48 hours** to review the text specifications cold, identify 4 critical security flaws (covering AI Supply Chain flaws, model weight backdoor injection, and lack of token-usage logging), and compile an executive-level **SaaS AI Corporate Risk Register**. This standalone project serves as un-fakeable evidence of your independent technical judgment.
-
----
-
 ## 📋 Recruiter-Optimized Portfolio Standard (The 1-Page Summary Grid)
 
 Tech hiring managers and startup founders do not have time to hunt through nested folders or massive code scripts. To guarantee placement in your paid internship, **every single project** pinned to your public GitHub profile must follow this exact, hyper-scannable format in your project READMEs:
