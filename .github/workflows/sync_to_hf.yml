@@ -76,3 +76,6 @@ jobs:
         run: |
           git push --force https://cyberdammy:$HF_TOKEN@huggingface.co/spaces/cyberdammy/ai-security-defense-lab main
 
+
+          added sync automation
+
