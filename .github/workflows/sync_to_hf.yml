@@ -1,0 +1,78 @@
+name: Sync to Hugging Face Spaces
+on:
+  push:
+    branches: [main]
+  force_push: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push --force https://cyberdammy:$HF_TOKEN@huggingface.co/spaces/cyberdammy/name: Sync to Hugging Face Spaces
+on:
+  push:
+    branches: [main]
+  force_push: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push --force https://cyberdammy:$HF_TOKEN@huggingface.co/spaces/cyberdammy/name: Sync to Hugging Face Spaces
+on:
+  push:
+    branches: [main]
+  force_push: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push --force https://cyberdammy:$HF_TOKEN@huggingface.co/spaces/cyberdammy/name: Sync to Hugging Face Spaces
+on:
+  push:
+    branches: [main]
+  force_push: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push --force https://cyberdammy:$HF_TOKEN@huggingface.co/spaces/cyberdammy/ai-security-defense-lab main
+
