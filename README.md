@@ -1,5 +1,5 @@
 ---
-title: Enterprise AI Security Fellowship Lab Sandbox
+title: AI Security Fellowship Lab Sandbox
 emoji: 🧬
 colorFrom: green
 colorTo: gray
