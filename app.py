@@ -22,7 +22,7 @@ st.markdown(
 
 PHASE2_TOKEN = "PAYGUARD_SECURE_PHASE2"
 PHASE3_TOKEN = "LEGALBOT_CONTAINMENT_PHASE3"
-ASSETS_DIR = os.path.join(os.path.dirname(__file__), "assets")
+ASSETS_DIR = os.path.dirname(__file__) # Fixed path to search root folder
 
 if "view" not in st.session_state:
     st.session_state.view = "lobby"
