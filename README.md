@@ -1,9 +1,10 @@
 ---
 title: Enterprise AI Security Fellowship Lab Sandbox
 emoji: 🧬
-colorFrom: navy
-colorTo: emerald
-sdk: streamlit
+colorFrom: green
+colorTo: gray
+sdk: docker
+sdk_version: "1.58.0"
 app_file: app.py
 pinned: false
 ---
@@ -129,10 +130,27 @@ If you hit a red screen, environment crash, or terminal error, you are **forbidd
     > Analyze this raw error, explain its cause in non-jargon terms, and give me the exact targeted code patch to fix it: [PASTE ERROR HERE]"*
 
 2.  **Consult the Common Bottlenecks:**
+    *   Error: `ModuleNotFoundError: No module named 'streamlit'` -> Fix: `Run pip install -r requirements.txt` in your terminal.
+
+    *   Error: App won't update in the browser -> Fix: Press `Ctrl + S` inside Codespaces to actually save your changes to `app.py.`
+
+    *   Error: Port 8501 is blocked -> Fix: Hit `Ctrl + C` in the terminal to kill old orphaned running instances before restarting.
+   
+3. **The Support Ticket Format:** 
+If you are still completely stuck after 15 minutes, post your query in the support channel using this exact format:
+    *   **Context:** [What level/step were you trying to execute?]
+  
+    *   **Raw Error:** [Paste screenshot or terminal trace log]
+      
+    *   **AI Proof:** [What did you ask Claude, and what happened when you ran the suggested fix?]
 
 
 ## 🤝 Contributing & Scope
 
-This repository is an active educational canvas for Fellowship Cohorts. Bugs that are **not** part of the intentional multi-sector vulnerabilities can be reported via Github Issues. 
+This repository is an active educational canvas for Fellowship Cohorts. 
+
+Bugs that are **not** part of the intentional multi-sector vulnerabilities can be reported via Github Issues. 
+
+
 
 **Made with 💙 for Elite Security Education and Practical Cyber Defense.**
