@@ -1,23 +1,27 @@
 # Use the official lightweight Python image
 FROM python:3.11-slim
 
-# Set up a new non-root user for security containment
-RUN useradd -m -u 1000 user
+# Expose the mandatory port required by Hugging Face Spaces natively
+EXPOSE 7860
+
+# Establish server path parameters
+ENV STREAMLIT_SERVER_PORT=7860
+ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
+
+# Set up the base directory routing map
+WORKDIR /app
+
+# Set up a safe non-root user environment profile
+RUN useradd -m -u 1000 user && chown -R user:user /app
 USER user
 ENV PATH="/home/user/.local/bin:$PATH"
 
-# Set up the initial configuration working directory
-WORKDIR /app
-
-# Copy and install dependencies
-COPY --chown=user requirements.txt requirements.txt
+# Copy package installation registers first to leverage cache matrices
+COPY --chown=user requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Copy the remaining project assets and code files
-COPY --chown=user . /app
+# Copy all remaining project code and folder elements explicitly to the app path root
+COPY --chown=user . .
 
-# FORCE WORKDIR ALIGNMENT BEFORE EXECUTION
-WORKDIR /app
-
-# Streamlit-specific configurations to listen on Hugging Face's mandatory port 7860
-CMD ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
+# Launch the Streamlit server engine out of the box
+CMD ["streamlit", "run", "app.py"]
