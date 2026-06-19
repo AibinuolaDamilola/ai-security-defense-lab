@@ -6,6 +6,7 @@ RUN useradd -m -u 1000 user
 USER user
 ENV PATH="/home/user/.local/bin:$PATH"
 
+# Set up the initial configuration working directory
 WORKDIR /app
 
 # Copy and install dependencies
@@ -14,6 +15,9 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # Copy the remaining project assets and code files
 COPY --chown=user . /app
+
+# FORCE WORKDIR ALIGNMENT BEFORE EXECUTION
+WORKDIR /app
 
 # Streamlit-specific configurations to listen on Hugging Face's mandatory port 7860
 CMD ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
