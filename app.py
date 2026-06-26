@@ -224,10 +224,8 @@ def render_lobby(student_id):
                         box-shadow:0 8px 24px rgba(0,0,0,0.3); margin-top:10px;">
               <img src="data:image/png;base64,{LOGO_B64}" style="max-width:170px; display:block;">
             </div>
-          </div>
           <div style="margin-top:10px;">
             {MESH_SVG}
-          </div>
         </div>
         """,
         unsafe_allow_html=True,
