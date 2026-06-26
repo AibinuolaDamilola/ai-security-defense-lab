@@ -226,6 +226,10 @@ def render_lobby(student_id):
             </div>
           <div style="margin-top:10px;">
             {MESH_SVG}
+         </div>
+
+        </div>
+        </div>
         </div>
         """,
         unsafe_allow_html=True,
