@@ -220,7 +220,6 @@ def render_lobby(student_id):
               <div style="margin-top:10px; font-size:13px; color:#A7F3D0;">
                 ✓ Real startup architectures &nbsp;&nbsp; ✓ Live vulnerability simulations
               </div>
-            </div>
             <div style="background:#fff; border-radius:16px; padding:18px 26px;
                         box-shadow:0 8px 24px rgba(0,0,0,0.3); margin-top:10px;">
               <img src="data:image/png;base64,{LOGO_B64}" style="max-width:170px; display:block;">
