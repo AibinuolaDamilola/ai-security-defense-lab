@@ -356,7 +356,7 @@ def render_medvitals(student_id):
          "UserAgent": "python-requests/2.28.1", "UserIdentity": "medvitals-deploy-bot", "StudentID": student_id},
         {"EventTime": "2026-06-30T03:03:02Z", "EventName": "PutObject", "SourceIPAddress": "198.51.100.45",
          "UserAgent": "python-requests/2.28.1", "UserIdentity": "medvitals-deploy-bot",
-         "RequestParameters": {"bucketName": "medvitals-patient-records"}, "StudentID": student_id},
+         "RequestParameters": {"bucketName": "medvitals-patient-records", "status": "Success (Privilege Escalation Vector)"}, "StudentID": student_id},
     ]
     st.json(cloudtrail_logs)
     st.caption("Task: Identify the indicator of compromise (IoC) in this log set and write your Incident Timeline Report.")
