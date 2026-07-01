@@ -115,42 +115,35 @@ PROJECT X: [Insert Target Platform Name, e.g., PayGuard FinTech Pipeline Securit
 ====================================================================================
 ```
 
+
+### 🏢 The Evolving Target Environments (One Asset, Three Sectors)
+
+👉 **[LIVE APPLICATION PREVIEW]** Interact with the live target environments and test the master application UI sandbox directly in your browser on [[Hugging Face Spaces](https://huggingface.co/spaces/cyberdammy/ai-security-defense-lab)].
+
+
+## Contributing 🤝
+
+Contributions are welcome! This repository is designed to be an evolving, community-driven canvas for AI defense education. Whether you want to sharpen the existing infrastructure or scale the platform, feel free to open a Pull Request (PR) or submit an Issue.
+
+We highly encourage you to:
+*   **Add New Vulnerabilities:** Introduce modern, real-world cloud or AI-specific attack surfaces to any of the existing levels.
+*   **Add More Levels:** Want to add a Level 4 or Level 5 modeling a new sector (e.g., Biotech RAG poisoning or autonomous EdTech agent hijacking)? Build the layout and submit it!
+*   **Improve Existing Features:** Enhance the Streamlit frontend UI/UX, optimize the Docker configurations, or harden background logic matrices.
+*   **Enhance Documentation:** Document advanced testing scenarios, update cheat sheets, or add troubleshooting write-ups to help beginners.
+*   **Fix Bugs:** Patch any unintentional application syntax or environment errors (that aren't part of the core intentional vulnerabilities).
+
+### How to Contribute:
+1. Fork this repository to your profile.
+2. Create a new branch for your feature: `git checkout -b feature/amazing-new-level`.
+3. Commit your changes: `git commit -m "feat: added data poisoning scenario to level 2"`.
+4. Push to your branch: `git push origin feature/amazing-new-level`.
+5. Open a Pull Request against our master branch for a structural security review.
+
+
+## 📝 License
+MIT License - See LICENSE file
+
 ---
-
-## 🛡️ The 15-Minute Troubleshooting Protocol
-
-As a cybersecurity professional, independent problem-solving is your primary skill. 
-
-If you hit a red screen, environment crash, or terminal error, you are **forbidden** from messaging the Lead Instructor until you have spent **15 minutes** troubleshooting independently using this protocol:
-
-1.  **Pin the Persona:** Keep this prompt pinned in your personal Claude/ChatGPT interface:
-   
-    > *"Act as a world-class DevOps and Python debugging assistant.
-    > I am an engineering intern working on the AI Security Fellowship labs in GitHub Codespaces.
-    > Analyze this raw error, explain its cause in non-jargon terms, and give me the exact targeted code patch to fix it: [PASTE ERROR HERE]"*
-
-2.  **Consult the Common Bottlenecks:**
-    *   Error: `ModuleNotFoundError: No module named 'streamlit'` -> Fix: `Run pip install -r requirements.txt` in your terminal.
-
-    *   Error: App won't update in the browser -> Fix: Press `Ctrl + S` inside Codespaces to actually save your changes to `app.py.`
-
-    *   Error: Port 8501 is blocked -> Fix: Hit `Ctrl + C` in the terminal to kill old orphaned running instances before restarting.
-   
-3. **The Support Ticket Format:** 
-If you are still completely stuck after 15 minutes, post your query in the support channel using this exact format:
-    *   **Context:** [What level/step were you trying to execute?]
-  
-    *   **Raw Error:** [Paste screenshot or terminal trace log]
-      
-    *   **AI Proof:** [What did you ask Claude, and what happened when you ran the suggested fix?]
-
-
-## 🤝 Contributing & Scope
-
-This repository is an active educational canvas for Fellowship Cohorts. 
-
-Bugs that are **not** part of the intentional multi-sector vulnerabilities can be reported via Github Issues. 
-
 
 
 **Made with 💙 for Elite Security Education and Practical Cyber Defense.**
