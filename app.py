@@ -223,16 +223,34 @@ def render_lobby(student_id):
             <div style="background:#fff; border-radius:16px; padding:18px 26px;
                         box-shadow:0 8px 24px rgba(0,0,0,0.3); margin-top:10px;">
               <img src="data:image/png;base64,{LOGO_B64}" style="max-width:170px; display:block;">
-            </div>
+          </div> 
+          
           <div style="margin-top:10px;">
             {MESH_SVG}
           </div>
-        </div>
+
+          <div style="margin-top:18px;">
+              <span style="background:#E8A832;color:#1a1a1a;padding:10px 22px;
+                  border-radius:6px;font-weight:600;font-size:14px;
+                  margin-right:12px;display:inline-block;">
+                  Enter the Lab
+              </span>
+
+              <span style="border:1px solid #94A3B8;color:white;
+                  padding:10px 22px;border-radius:6px;
+                  font-weight:500;font-size:14px;
+                  display:inline-block;">
+                  View the Syllabus
+              </span>
+          </div>
+          
+         </div>
+         </div>
+         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    decorative_buttons("Enter the Lab", "View the Syllabus", "#E8A832")
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("### Select Active Target Environment")
