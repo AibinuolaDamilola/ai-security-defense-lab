@@ -14,7 +14,7 @@ pinned: false
 
 Welcome to the core engineering and infrastructure repository for the AI Security Fellowship. This workspace houses a live, multi-sector SaaS architecture built entirely to simulate real-world, high-risk security flaws found in venture-backed tech startups.
 
-Over the next 16 weeks, you will not act as a casual script kiddie or a generic developer. Your role is that of a **Principal Security Auditor and Cyber Defender**. You will investigate active breaches, map out complex data flows, write resilient middleware guardrails, and defend your engineering decisions in front of a technical board.
+Your role is that of a **Principal Security Auditor and Cyber Defender**. You will investigate active breaches, map out complex data flows, write resilient middleware guardrails, and defend your engineering decisions in front of a technical board.
 
 ⚠ **WARNING: This repository contains intentionally vulnerable pipelines, exposed credentials, and flawed autonomous workflows. It is strictly configured for educational and portfolio containment purposes. Do not deploy to public production clouds without remediation.**
 
@@ -89,7 +89,7 @@ The application utilizes sidebar conditional selectboxes to seamlessly pivot acr
 
 Tech hiring managers and startup founders do not have time to hunt through nested folders or massive code scripts. 
 
-To guarantee placement in your paid internship, **every single project** pinned to your public GitHub profile must follow this exact, hyper-scannable format in your project READMEs:
+**By having this format** pinned to your public GitHub profile project READMEs, they can quickly use it to access you.
 
 ```text
 ====================================================================================
