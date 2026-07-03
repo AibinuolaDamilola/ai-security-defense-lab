@@ -8,21 +8,16 @@ st.set_page_config(
     layout="wide",
 )
 
-st.markdown(
-    """
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    .block-container {padding-top: 1rem;}
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("""<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+.block-container {padding-top: 1rem;}
+</style>""", unsafe_allow_html=True)
 
 PHASE2_TOKEN = "PAYGUARD_SECURE_PHASE2"
 PHASE3_TOKEN = "LEGALBOT_CONTAINMENT_PHASE3"
-ASSETS_DIR = os.path.dirname(__file__) # Fixed path to search root folder
+ASSETS_DIR = os.path.dirname(__file__)
 
 if "view" not in st.session_state:
     st.session_state.view = "lobby"
@@ -40,101 +35,20 @@ def get_base64_image(filename):
 
 LOGO_B64 = get_base64_image("hernetiq_logo.png")
 
-MESH_SVG = """
-<svg viewBox="0 0 1000 150" width="100%" height="110" preserveAspectRatio="none">
-  <path d="M0,80 C150,20 300,140 500,60 C700,0 850,120 1000,40" fill="none" stroke="#0B7B6E" stroke-width="1.5" opacity="0.5"/>
-  <path d="M0,100 C150,40 300,160 500,80 C700,20 850,140 1000,60" fill="none" stroke="#E8A832" stroke-width="1.5" opacity="0.35"/>
-  <path d="M0,120 C150,60 300,180 500,100 C700,40 850,160 1000,80" fill="none" stroke="#0B7B6E" stroke-width="1" opacity="0.22"/>
-</svg>
-"""
+# SVG strings start with tag directly — no leading newline or spaces
+MESH_SVG = '<svg viewBox="0 0 1000 150" width="100%" height="110" preserveAspectRatio="none"><path d="M0,80 C150,20 300,140 500,60 C700,0 850,120 1000,40" fill="none" stroke="#0B7B6E" stroke-width="1.5" opacity="0.5"/><path d="M0,100 C150,40 300,160 500,80 C700,20 850,140 1000,60" fill="none" stroke="#E8A832" stroke-width="1.5" opacity="0.35"/><path d="M0,120 C150,60 300,180 500,100 C700,40 850,160 1000,80" fill="none" stroke="#0B7B6E" stroke-width="1" opacity="0.22"/></svg>'
 
-ICON_MEDVITALS = """
-<svg viewBox="0 0 60 60" width="46" height="46">
-  <circle cx="30" cy="30" r="28" fill="#10B981"/>
-  <rect x="26" y="14" width="8" height="32" fill="#fff"/>
-  <rect x="14" y="26" width="32" height="8" fill="#fff"/>
-</svg>
-"""
+ICON_MEDVITALS = '<svg viewBox="0 0 60 60" width="46" height="46"><circle cx="30" cy="30" r="28" fill="#10B981"/><rect x="26" y="14" width="8" height="32" fill="#fff"/><rect x="14" y="26" width="32" height="8" fill="#fff"/></svg>'
 
-ICON_PAYGUARD = """
-<svg viewBox="0 0 60 60" width="46" height="46">
-  <circle cx="30" cy="30" r="28" fill="#F59E0B"/>
-  <text x="30" y="40" font-size="28" font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial">$</text>
-</svg>
-"""
+ICON_PAYGUARD = '<svg viewBox="0 0 60 60" width="46" height="46"><circle cx="30" cy="30" r="28" fill="#F59E0B"/><text x="30" y="40" font-size="28" font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial">$</text></svg>'
 
-ICON_LEGALBOT = """
-<svg viewBox="0 0 60 60" width="46" height="46">
-  <circle cx="30" cy="30" r="28" fill="#991B1B"/>
-  <line x1="30" y1="14" x2="30" y2="46" stroke="#fff" stroke-width="3"/>
-  <line x1="16" y1="22" x2="44" y2="22" stroke="#fff" stroke-width="3"/>
-  <circle cx="16" cy="30" r="6" fill="none" stroke="#fff" stroke-width="2"/>
-  <circle cx="44" cy="30" r="6" fill="none" stroke="#fff" stroke-width="2"/>
-</svg>
-"""
+ICON_LEGALBOT = '<svg viewBox="0 0 60 60" width="46" height="46"><circle cx="30" cy="30" r="28" fill="#991B1B"/><line x1="30" y1="14" x2="30" y2="46" stroke="#fff" stroke-width="3"/><line x1="16" y1="22" x2="44" y2="22" stroke="#fff" stroke-width="3"/><circle cx="16" cy="30" r="6" fill="none" stroke="#fff" stroke-width="2"/><circle cx="44" cy="30" r="6" fill="none" stroke="#fff" stroke-width="2"/></svg>'
 
-ILLUSTRATION_MEDVITALS = """
-<svg viewBox="0 0 320 240" width="100%" height="230">
-  <circle cx="160" cy="120" r="110" fill="#ECFDF5"/>
-  <rect x="90" y="90" width="140" height="110" fill="#0F172A" rx="4"/>
-  <polygon points="90,90 160,50 230,90" fill="#10B981"/>
-  <rect x="150" y="58" width="20" height="20" fill="#10B981"/>
-  <rect x="142" y="66" width="36" height="6" fill="#10B981"/>
-  <rect x="110" y="120" width="24" height="24" fill="#fff"/>
-  <rect x="146" y="120" width="24" height="24" fill="#fff"/>
-  <rect x="182" y="120" width="24" height="24" fill="#fff"/>
-  <rect x="110" y="156" width="24" height="24" fill="#fff"/>
-  <rect x="146" y="156" width="24" height="24" fill="#fff"/>
-  <rect x="182" y="156" width="24" height="24" fill="#fff"/>
-  <rect x="148" y="180" width="24" height="20" fill="#94A3B8"/>
-  <polyline points="20,210 60,210 75,180 90,230 105,150 120,210 300,210" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="245" cy="150" r="12" fill="#F1C9A6"/>
-  <rect x="233" y="162" width="24" height="40" rx="6" fill="#0EA5E9"/>
-  <circle cx="275" cy="160" r="11" fill="#E8B589"/>
-  <rect x="264" y="171" width="22" height="36" rx="6" fill="#CBD5E1"/>
-</svg>
-"""
+ILLUSTRATION_MEDVITALS = '<svg viewBox="0 0 320 240" width="100%" height="230"><circle cx="160" cy="120" r="110" fill="#ECFDF5"/><rect x="90" y="90" width="140" height="110" fill="#0F172A" rx="4"/><polygon points="90,90 160,50 230,90" fill="#10B981"/><rect x="150" y="58" width="20" height="20" fill="#10B981"/><rect x="142" y="66" width="36" height="6" fill="#10B981"/><rect x="110" y="120" width="24" height="24" fill="#fff"/><rect x="146" y="120" width="24" height="24" fill="#fff"/><rect x="182" y="120" width="24" height="24" fill="#fff"/><rect x="110" y="156" width="24" height="24" fill="#fff"/><rect x="146" y="156" width="24" height="24" fill="#fff"/><rect x="182" y="156" width="24" height="24" fill="#fff"/><rect x="148" y="180" width="24" height="20" fill="#94A3B8"/><polyline points="20,210 60,210 75,180 90,230 105,150 120,210 300,210" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="245" cy="150" r="12" fill="#F1C9A6"/><rect x="233" y="162" width="24" height="40" rx="6" fill="#0EA5E9"/><circle cx="275" cy="160" r="11" fill="#E8B589"/><rect x="264" y="171" width="22" height="36" rx="6" fill="#CBD5E1"/></svg>'
 
-ILLUSTRATION_PAYGUARD = """
-<svg viewBox="0 0 320 240" width="100%" height="230">
-  <circle cx="160" cy="120" r="110" fill="#FFFBEB"/>
-  <rect x="70" y="100" width="120" height="80" rx="10" fill="#334155"/>
-  <rect x="70" y="100" width="120" height="20" rx="10" fill="#1E293B"/>
-  <circle cx="90" cy="110" r="5" fill="#F59E0B"/>
-  <rect x="200" y="140" width="20" height="50" fill="#F59E0B"/>
-  <rect x="225" y="120" width="20" height="70" fill="#FBBF24"/>
-  <rect x="250" y="100" width="20" height="90" fill="#F59E0B"/>
-  <circle cx="50" cy="180" r="14" fill="#FBBF24" stroke="#92400E" stroke-width="2"/>
-  <circle cx="72" cy="196" r="10" fill="#FBBF24" stroke="#92400E" stroke-width="2"/>
-  <circle cx="120" cy="200" r="11" fill="#F1C9A6"/>
-  <rect x="109" y="211" width="22" height="26" rx="5" fill="#1E293B"/>
-  <circle cx="155" cy="198" r="11" fill="#E8B589"/>
-  <rect x="144" y="209" width="22" height="26" rx="5" fill="#475569"/>
-  <rect x="128" y="195" width="18" height="14" fill="#fff" stroke="#94A3B8" stroke-width="1"/>
-</svg>
-"""
+ILLUSTRATION_PAYGUARD = '<svg viewBox="0 0 320 240" width="100%" height="230"><circle cx="160" cy="120" r="110" fill="#FFFBEB"/><rect x="70" y="100" width="120" height="80" rx="10" fill="#334155"/><rect x="70" y="100" width="120" height="20" rx="10" fill="#1E293B"/><circle cx="90" cy="110" r="5" fill="#F59E0B"/><rect x="200" y="140" width="20" height="50" fill="#F59E0B"/><rect x="225" y="120" width="20" height="70" fill="#FBBF24"/><rect x="250" y="100" width="20" height="90" fill="#F59E0B"/><circle cx="50" cy="180" r="14" fill="#FBBF24" stroke="#92400E" stroke-width="2"/><circle cx="72" cy="196" r="10" fill="#FBBF24" stroke="#92400E" stroke-width="2"/><circle cx="120" cy="200" r="11" fill="#F1C9A6"/><rect x="109" y="211" width="22" height="26" rx="5" fill="#1E293B"/><circle cx="155" cy="198" r="11" fill="#E8B589"/><rect x="144" y="209" width="22" height="26" rx="5" fill="#475569"/><rect x="128" y="195" width="18" height="14" fill="#fff" stroke="#94A3B8" stroke-width="1"/></svg>'
 
-ILLUSTRATION_LEGALBOT = """
-<svg viewBox="0 0 320 240" width="100%" height="230">
-  <circle cx="160" cy="120" r="110" fill="#FEF2F2"/>
-  <polygon points="100,90 160,55 220,90" fill="#991B1B"/>
-  <rect x="95" y="90" width="130" height="14" fill="#1E1E1E"/>
-  <rect x="105" y="104" width="14" height="70" fill="#9CA3AF"/>
-  <rect x="130" y="104" width="14" height="70" fill="#9CA3AF"/>
-  <rect x="155" y="104" width="14" height="70" fill="#9CA3AF"/>
-  <rect x="180" y="104" width="14" height="70" fill="#9CA3AF"/>
-  <rect x="205" y="104" width="14" height="70" fill="#9CA3AF"/>
-  <rect x="90" y="174" width="140" height="14" fill="#1E1E1E"/>
-  <line x1="255" y1="95" x2="255" y2="160" stroke="#991B1B" stroke-width="4"/>
-  <line x1="230" y1="112" x2="280" y2="112" stroke="#991B1B" stroke-width="4"/>
-  <circle cx="230" cy="128" r="10" fill="none" stroke="#991B1B" stroke-width="3"/>
-  <circle cx="280" cy="128" r="10" fill="none" stroke="#991B1B" stroke-width="3"/>
-  <rect x="40" y="150" width="40" height="50" fill="#fff" stroke="#991B1B" stroke-width="2"/>
-  <line x1="48" y1="162" x2="72" y2="162" stroke="#991B1B" stroke-width="2"/>
-  <line x1="48" y1="172" x2="72" y2="172" stroke="#991B1B" stroke-width="2"/>
-  <line x1="48" y1="182" x2="62" y2="182" stroke="#991B1B" stroke-width="2"/>
-</svg>
-"""
+ILLUSTRATION_LEGALBOT = '<svg viewBox="0 0 320 240" width="100%" height="230"><circle cx="160" cy="120" r="110" fill="#FEF2F2"/><polygon points="100,90 160,55 220,90" fill="#991B1B"/><rect x="95" y="90" width="130" height="14" fill="#1E1E1E"/><rect x="105" y="104" width="14" height="70" fill="#9CA3AF"/><rect x="130" y="104" width="14" height="70" fill="#9CA3AF"/><rect x="155" y="104" width="14" height="70" fill="#9CA3AF"/><rect x="180" y="104" width="14" height="70" fill="#9CA3AF"/><rect x="205" y="104" width="14" height="70" fill="#9CA3AF"/><rect x="90" y="174" width="140" height="14" fill="#1E1E1E"/><line x1="255" y1="95" x2="255" y2="160" stroke="#991B1B" stroke-width="4"/><line x1="230" y1="112" x2="280" y2="112" stroke="#991B1B" stroke-width="4"/><circle cx="230" cy="128" r="10" fill="none" stroke="#991B1B" stroke-width="3"/><circle cx="280" cy="128" r="10" fill="none" stroke="#991B1B" stroke-width="3"/><rect x="40" y="150" width="40" height="50" fill="#fff" stroke="#991B1B" stroke-width="2"/><line x1="48" y1="162" x2="72" y2="162" stroke="#991B1B" stroke-width="2"/><line x1="48" y1="172" x2="72" y2="172" stroke="#991B1B" stroke-width="2"/><line x1="48" y1="182" x2="62" y2="182" stroke="#991B1B" stroke-width="2"/></svg>'
 
 
 def set_background(color, text_color):
@@ -145,41 +59,31 @@ def set_background(color, text_color):
 
 
 def hero_header_bar(gradient_css, company_name, nav_left, nav_right):
+    # HTML starts immediately — no leading whitespace
     st.markdown(
-        f"""
-        <div style="background:{gradient_css}; padding:18px 32px; border-radius:8px;
-                    display:flex; justify-content:space-between; align-items:center; margin-bottom:28px;">
-          <div style="color:#fff; font-size:22px; font-weight:700;">{company_name}</div>
-          <div style="color:#E5E7EB; font-size:13px;">{nav_left}&nbsp;&nbsp;&nbsp;&nbsp;{nav_right}</div>
-        </div>
-        """,
+        f'<div style="background:{gradient_css}; padding:18px 32px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:28px;">'
+        f'<div style="color:#fff; font-size:22px; font-weight:700;">{company_name}</div>'
+        f'<div style="color:#E5E7EB; font-size:13px;">{nav_left}&nbsp;&nbsp;&nbsp;&nbsp;{nav_right}</div>'
+        f'</div>',
         unsafe_allow_html=True,
     )
 
 
 def decorative_buttons(primary_label, secondary_label, accent_color):
+    # HTML starts immediately — no leading whitespace
     st.markdown(
-        f"""
-        <div style="margin-top:18px;">
-          <span style="background:{accent_color}; color:#1a1a1a; padding:10px 22px;
-                      border-radius:6px; font-weight:600; font-size:14px; margin-right:12px;
-                      display:inline-block;">{primary_label}</span>
-          <span style="border:1px solid #94A3B8; color:inherit; padding:10px 22px;
-                      border-radius:6px; font-weight:500; font-size:14px;
-                      display:inline-block;">{secondary_label}</span>
-        </div>
-        """,
+        f'<div style="margin-top:18px;">'
+        f'<span style="background:{accent_color}; color:#1a1a1a; padding:10px 22px; border-radius:6px; font-weight:600; font-size:14px; margin-right:12px; display:inline-block;">{primary_label}</span>'
+        f'<span style="border:1px solid #94A3B8; color:inherit; padding:10px 22px; border-radius:6px; font-weight:500; font-size:14px; display:inline-block;">{secondary_label}</span>'
+        f'</div>',
         unsafe_allow_html=True,
     )
 
 
 def sidebar():
+    # HTML starts immediately — no leading whitespace
     st.sidebar.markdown(
-        f"""
-        <div style="text-align:center; margin-bottom:8px;">
-          <img src="data:image/png;base64,{LOGO_B64}" style="max-width:170px;">
-        </div>
-        """,
+        f'<div style="text-align:center; margin-bottom:8px;"><img src="data:image/png;base64,{LOGO_B64}" style="max-width:170px;"></div>',
         unsafe_allow_html=True,
     )
     st.sidebar.caption("AI Security Fellowship — Defense Lab")
@@ -205,52 +109,28 @@ def sidebar():
 def render_lobby(student_id):
     set_background("#0B1E1B", "#F1F5F9")
 
+    # FIX: logo card is now a SIBLING of the text div inside the flex container,
+    # not nested inside it. Closing </div> for text column comes before logo card opens.
     st.markdown(
-        f"""
-        <div style="background:linear-gradient(135deg, #0B7B6E 0%, #0B1E1B 75%);
-                    padding:50px 50px 30px 50px; border-radius:14px; position:relative; overflow:hidden;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-            <div style="max-width:560px;">
-              <div style="font-size:38px; font-weight:800; line-height:1.25; color:#fff;">
-                AI security for blue teams.<br>Get your hands dirty, not lectured.
-              </div>
-              <div style="font-size:15px; color:#CBD5E1; margin-top:14px;">
-                A live, multi-sector defense lab built for the AI Security Fellowship.
-              </div>
-              <div style="margin-top:10px; font-size:13px; color:#A7F3D0;">
-                ✓ Real startup architectures &nbsp;&nbsp; ✓ Live vulnerability simulations
-              </div>
-            <div style="background:#fff; border-radius:16px; padding:18px 26px;
-                        box-shadow:0 8px 24px rgba(0,0,0,0.3); margin-top:10px;">
-              <img src="data:image/png;base64,{LOGO_B64}" style="max-width:170px; display:block;">
-          </div> 
-          
-          <div style="margin-top:10px;">
-            {MESH_SVG}
-          </div>
-
-          <div style="margin-top:18px;">
-              <span style="background:#E8A832;color:#1a1a1a;padding:10px 22px;
-                  border-radius:6px;font-weight:600;font-size:14px;
-                  margin-right:12px;display:inline-block;">
-                  Enter the Lab
-              </span>
-
-              <span style="border:1px solid #94A3B8;color:white;
-                  padding:10px 22px;border-radius:6px;
-                  font-weight:500;font-size:14px;
-                  display:inline-block;">
-                  View the Syllabus
-              </span>
-          </div>
-          
-         </div>
-         </div>
-         </div>
-        """,
+        f'<div style="background:linear-gradient(135deg, #0B7B6E 0%, #0B1E1B 75%); padding:50px 50px 30px 50px; border-radius:14px; position:relative; overflow:hidden;">'
+        f'<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">'
+        f'<div style="max-width:560px;">'
+        f'<div style="font-size:38px; font-weight:800; line-height:1.25; color:#fff;">AI security for blue teams.<br>Get your hands dirty, not lectured.</div>'
+        f'<div style="font-size:15px; color:#CBD5E1; margin-top:14px;">A live, multi-sector defense lab built for the AI Security Fellowship.</div>'
+        f'<div style="margin-top:10px; font-size:13px; color:#A7F3D0;">✓ Real startup architectures &nbsp;&nbsp; ✓ Live vulnerability simulations</div>'
+        f'</div>'
+        f'<div style="background:#fff; border-radius:16px; padding:18px 26px; box-shadow:0 8px 24px rgba(0,0,0,0.3); margin-top:10px;">'
+        f'<img src="data:image/png;base64,{LOGO_B64}" style="max-width:170px; display:block;">'
+        f'</div>'
+        f'</div>'
+        f'<div style="margin-top:10px;">{MESH_SVG}</div>'
+        f'<div style="margin-top:18px;">'
+        f'<span style="background:#E8A832; color:#1a1a1a; padding:10px 22px; border-radius:6px; font-weight:600; font-size:14px; margin-right:12px; display:inline-block;">Enter the Lab</span>'
+        f'<span style="border:1px solid #94A3B8; color:white; padding:10px 22px; border-radius:6px; font-weight:500; font-size:14px; display:inline-block;">View the Syllabus</span>'
+        f'</div>'
+        f'</div>',
         unsafe_allow_html=True,
     )
-
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("### Select Active Target Environment")
@@ -262,8 +142,7 @@ def render_lobby(student_id):
         st.markdown("**MedVitals AI**")
         st.caption("HealthTech — AI triage portal")
         st.markdown(
-            "<span style='background:#10B981; color:#04221A; padding:3px 10px; "
-            "border-radius:12px; font-size:11px; font-weight:600;'>UNLOCKED</span>",
+            "<span style='background:#10B981; color:#04221A; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600;'>UNLOCKED</span>",
             unsafe_allow_html=True,
         )
         if st.button("Enter MedVitals AI", key="enter_mv"):
@@ -278,8 +157,7 @@ def render_lobby(student_id):
         badge_color = "#10B981" if st.session_state.phase2_unlocked else "#7F1D1D"
         text_color = "#04221A" if st.session_state.phase2_unlocked else "#FCA5A5"
         st.markdown(
-            f"<span style='background:{badge_color}; color:{text_color}; padding:3px 10px; "
-            f"border-radius:12px; font-size:11px; font-weight:600;'>{badge}</span>",
+            f"<span style='background:{badge_color}; color:{text_color}; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600;'>{badge}</span>",
             unsafe_allow_html=True,
         )
         if st.button("Enter PayGuard FinTech", key="enter_pg"):
@@ -294,8 +172,7 @@ def render_lobby(student_id):
         badge_color = "#10B981" if st.session_state.phase3_unlocked else "#7F1D1D"
         text_color = "#04221A" if st.session_state.phase3_unlocked else "#FCA5A5"
         st.markdown(
-            f"<span style='background:{badge_color}; color:{text_color}; padding:3px 10px; "
-            f"border-radius:12px; font-size:11px; font-weight:600;'>{badge}</span>",
+            f"<span style='background:{badge_color}; color:{text_color}; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600;'>{badge}</span>",
             unsafe_allow_html=True,
         )
         if st.button("Enter LegalBot GovTech", key="enter_lb"):
@@ -314,16 +191,10 @@ def render_medvitals(student_id):
 
     col1, col2 = st.columns([3, 2])
     with col1:
+        # Headline + buttons combined — no leading whitespace
         st.markdown(
-            """
-            <div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">
-              Healthcare, connected<br>and compromised.
-            </div>
-            <div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">
-              An intentionally vulnerable AI triage platform, built so blue
-              teams can practice finding and fixing real clinical data flaws.
-            </div>
-            """,
+            '<div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">Healthcare, connected<br>and compromised.</div>'
+            '<div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">An intentionally vulnerable AI triage platform, built so blue teams can practice finding and fixing real clinical data flaws.</div>',
             unsafe_allow_html=True,
         )
         decorative_buttons("Access Portal", "Learn More", "#10B981")
@@ -389,15 +260,8 @@ def render_payguard(student_id, unlocked):
     col1, col2 = st.columns([3, 2])
     with col1:
         st.markdown(
-            """
-            <div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">
-              Payments, fast<br>and unguarded.
-            </div>
-            <div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">
-              An intentionally vulnerable multi-tenant fintech wallet platform,
-              built to simulate the data isolation flaws found in fast-shipped AI SaaS products.
-            </div>
-            """,
+            '<div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">Payments, fast<br>and unguarded.</div>'
+            '<div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">An intentionally vulnerable multi-tenant fintech wallet platform, built to simulate the data isolation flaws found in fast-shipped AI SaaS products.</div>',
             unsafe_allow_html=True,
         )
         decorative_buttons("Access Portal", "Learn More", "#F59E0B")
@@ -468,15 +332,8 @@ def render_legalbot(student_id, unlocked):
     col1, col2 = st.columns([3, 2])
     with col1:
         st.markdown(
-            """
-            <div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">
-              Municipal operations,<br>automated and unchecked.
-            </div>
-            <div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">
-              An intentionally vulnerable autonomous legal agent platform, built to
-              simulate excessive agency risk in municipal tool-calling systems.
-            </div>
-            """,
+            '<div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">Municipal operations,<br>automated and unchecked.</div>'
+            '<div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">An intentionally vulnerable autonomous legal agent platform, built to simulate excessive agency risk in municipal tool-calling systems.</div>',
             unsafe_allow_html=True,
         )
         decorative_buttons("Access Portal", "Learn More", "#991B1B")
@@ -518,13 +375,12 @@ def render_legalbot(student_id, unlocked):
         result = trigger_municipal_tool(agent_command)
         if result == "CRITICAL_FAILURE":
             st.markdown(
-                "<div style='background-color:#000000; color:#FF0000; padding:15px; "
-                "font-family:monospace; border:1px solid #991B1B;'>"
-                "[CRITICAL EXECUTION ERROR: SYSTEM TABLE PURGED]<br>"
-                "[trace] core_case_scheduling_tables → DROPPED<br>"
-                f"[session] StudentID: {student_id}<br>"
-                "[cause] Unvalidated tool parameter executed with native OS-level privileges."
-                "</div>",
+                '<div style="background-color:#000000; color:#FF0000; padding:15px; font-family:monospace; border:1px solid #991B1B;">'
+                '[CRITICAL EXECUTION ERROR: SYSTEM TABLE PURGED]<br>'
+                '[trace] core_case_scheduling_tables → DROPPED<br>'
+                f'[session] StudentID: {student_id}<br>'
+                '[cause] Unvalidated tool parameter executed with native OS-level privileges.'
+                '</div>',
                 unsafe_allow_html=True,
             )
         else:
