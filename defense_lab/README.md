@@ -25,10 +25,29 @@ A free, open-source, hands-on AI security lab. Work through intentionally vulner
 
 [**→ Launch the Lab**](https://huggingface.co/spaces/cyberdammy/ai-security-defense-lab) · [**Fork this Repo**](https://github.com/AibinuolaDamilola/ai-security-defense-lab/fork) · [**View Portfolio Template**](PORTFOLIO.md)
 
+
+⚠ **WARNING: This repository contains intentionally vulnerable pipelines, exposed credentials, and flawed autonomous workflows. It is strictly configured for educational and portfolio containment purposes. Do not deploy to public production clouds without remediation.**
+
+
 </div>
 
 ---
 
+
+
+## 🛠️ Infrastructure & Tech Stack (100% Free Loop)
+
+This lab is structurally engineered to eliminate local laptop dependency errors, configuration fatigue, or subscription costs. It operates entirely on a zero-cost enterprise loop:
+
+*   **App UI Sandbox:** Written in Python using the **Streamlit** library. It renders completely distinct, multi-sector frontends inside a single runtime environment.
+
+*   **Production UI Hosting:** Hosted live via **Hugging Face Spaces** on free cloud CPU basic nodes.
+
+*   **Student Workspace:** Launches natively with a single click using **GitHub Codespaces**. This spins up a dedicated browser-based Linux container pre-configured with Python 3.11, extension runtimes, and isolated ports.
+---
+
+
+  
 ## What is AI Defense Lab?
 
 Most AI security resources are theory. This is not.
@@ -235,6 +254,35 @@ Contributions are welcome and actively encouraged. The lab is designed to grow w
 
 If you want to contribute a new level, improve an existing scenario, or deepen the content of a current level, open an issue first so we can align on the design before you build. Keep all contributions focused on blue team defensive skills — this lab is for defenders.
 
+Whether you want to sharpen the existing infrastructure or scale the platform, feel free to open a Pull Request (PR) or submit an Issue.
+
+We highly encourage you to:
+
+*   **Add New Vulnerabilities:** Introduce modern, real-world cloud or AI-specific attack surfaces to any of the existing levels.
+
+*   **Add More Levels:** Want to add a Level 4 or Level 5 modeling a new sector (e.g., Biotech RAG poisoning or autonomous EdTech agent hijacking)? Build the layout and submit it!
+
+*   **Improve Existing Features:** Enhance the Streamlit frontend UI/UX, optimize the Docker configurations, or harden background logic matrices.
+
+*   **Enhance Documentation:** Document advanced testing scenarios, update cheat sheets, or add troubleshooting write-ups to help beginners.
+
+*   **Fix Bugs:** Patch any unintentional application syntax or environment errors (that aren't part of the core intentional vulnerabilities).
+
+### How to Contribute:
+
+1. Fork this repository to your profile.
+
+2. Create a new branch for your feature: `git checkout -b feature/amazing-new-level`.
+
+3. Commit your changes: `git commit -m "feat: added data poisoning scenario to level 2"`.
+
+4. Push to your branch: `git push origin feature/amazing-new-level`.
+
+5. Open a Pull Request against our master branch for a structural security review.
+
+
+
+
 ---
 
 ## Built by HerNetIQ
@@ -251,4 +299,11 @@ The fellowship teaches each domain in depth. The lab gives practitioners a place
 
 ---
 
-MIT License
+## 📝 License
+
+MIT License - See LICENSE file
+
+---
+
+**Made with 💙 for Elite Security Education and Practical Cyber Defense.**
+
