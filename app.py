@@ -40,6 +40,7 @@ HN_LOGO_B64  = load_b64("hernetiq_logo.png")
 for key, default in [
     ("user", None), ("access_token", None), ("refresh_token", None),
     ("view", "hub"), ("onboarding_step", 0), ("auth_error", ""), ("auth_success", ""),
+    ("pending_full_name", ""), ("l1_completed", False),
 ]:
     if key not in st.session_state:
         st.session_state[key] = default
@@ -125,7 +126,6 @@ def render_auth_screen():
             f'<div style="text-align:center; margin-bottom:24px; color:#94A3B8; font-size:12px;">Build your AI security portfolio. Level by level.</div>',
             unsafe_allow_html=True,
         )
-        st.markdown('<div style="background:#112823; border:1px solid #1a3530; border-radius:12px; padding:28px;">', unsafe_allow_html=True)
         if st.session_state.auth_error:
             st.error(st.session_state.auth_error)
         if st.session_state.auth_success:
@@ -150,7 +150,6 @@ def render_auth_screen():
                     do_sign_up(email_up, pass_up, full_name)
                 else:
                     st.warning("Fill in all three fields.")
-        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown(
             f'<div style="text-align:center; margin-top:16px;">'
             f'<img src="data:image/png;base64,{HN_LOGO_B64}" style="height:28px; opacity:0.7; vertical-align:middle; margin-right:8px;">'
@@ -163,35 +162,49 @@ def render_auth_screen():
 ONBOARDING_STEPS = [
     {
         "title": "Welcome to AI Defense Lab",
-        "body": (
-            "This is a free, open-source lab where you practice real AI security defence skills "
-            "— not by reading theory, but by working on intentionally vulnerable systems.\n\n"
-            "You will find real vulnerabilities, write real fixes, and commit real code. "
-            "By the time you finish, you will have a portfolio a hiring manager can actually examine."
+        "body_html": (
+            '<p style="color:#E2E8F0; font-size:14px; line-height:1.8; margin-bottom:12px;">'
+            'This is a free, open-source lab where you practice real AI security defence skills '
+            '— not by reading theory, but by working on intentionally vulnerable systems.'
+            '</p>'
+            '<p style="color:#E2E8F0; font-size:14px; line-height:1.8;">'
+            'You will find real vulnerabilities, write real fixes, and commit real code. '
+            'By the time you finish, you will have a portfolio a hiring manager can actually examine.'
+            '</p>'
         ),
         "emoji": "🛡️",
+        "has_name_input": True,
     },
     {
         "title": "How the levels work",
-        "body": (
-            "The lab has **5 levels**, each covering a different domain of AI security. "
-            "Level 1 starts at the beginning — cloud infrastructure and log forensics. "
-            "Each level unlocks only after you complete the one before it.\n\n"
-            "Every level lives in its own folder in your GitHub fork. "
-            "When you fix a vulnerability and commit the code, that commit becomes your evidence. "
-            "One fork. One Hugging Face Space. Five clean commits."
+        "body_html": (
+            '<p style="color:#E2E8F0; font-size:14px; line-height:1.8; margin-bottom:12px;">'
+            'The lab has <strong style="color:#A7F3D0;">5 levels</strong>, each covering a different domain of AI security. '
+            'Level 1 starts at the beginning — cloud infrastructure and log forensics. '
+            'Each level unlocks only after you complete the one before it.'
+            '</p>'
+            '<p style="color:#E2E8F0; font-size:14px; line-height:1.8;">'
+            'When you fix a vulnerability and commit the code to your GitHub fork, that commit becomes your portfolio evidence. '
+            'One fork. One Hugging Face Space. Five clean commits.'
+            '</p>'
         ),
         "emoji": "🔓",
+        "has_name_input": False,
     },
     {
         "title": "Your portfolio is the point",
-        "body": (
-            "Every level ends with a commit to your GitHub fork showing exactly what you changed and why. "
-            "A recruiter can click the link and see the before and the after — instantly.\n\n"
-            "Fill in **PORTFOLIO.md** in your repo as you go. "
-            "By Level 5, you have five documented defensive skills and a live proof-of-work repo under your own name."
+        "body_html": (
+            '<p style="color:#E2E8F0; font-size:14px; line-height:1.8; margin-bottom:12px;">'
+            'Every level ends with a commit to your GitHub fork showing exactly what you changed and why. '
+            'A recruiter can click the link and see the before and the after — instantly.'
+            '</p>'
+            '<p style="color:#E2E8F0; font-size:14px; line-height:1.8;">'
+            'Fill in <strong style="color:#A7F3D0;">PORTFOLIO.md</strong> in your repo as you go. '
+            'By Level 5, you have five documented defensive skills and a live proof-of-work repo under your own name.'
+            '</p>'
         ),
         "emoji": "📁",
+        "has_name_input": False,
     },
 ]
 
@@ -204,10 +217,27 @@ def render_onboarding():
     with center:
         st.markdown("<div style='height:60px;'></div>", unsafe_allow_html=True)
         st.markdown(
-            f'<div style="background:#112823; border:1px solid #1a3530; border-radius:14px; padding:36px;"><div style="font-size:40px; text-align:center; margin-bottom:16px;">{data["emoji"]}</div><div style="font-size:11px; color:#A7F3D0; text-align:center; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px;">Step {step+1} of {len(ONBOARDING_STEPS)}</div><div style="font-size:22px; font-weight:800; color:#fff; text-align:center; margin-bottom:20px;">{data["title"]}</div></div>',
+            f'<div style="background:#112823; border:1px solid #1a3530; border-radius:14px; padding:36px;">'
+            f'<div style="font-size:40px; text-align:center; margin-bottom:16px;">{data["emoji"]}</div>'
+            f'<div style="font-size:11px; color:#A7F3D0; text-align:center; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px;">Step {step+1} of {len(ONBOARDING_STEPS)}</div>'
+            f'<div style="font-size:22px; font-weight:800; color:#fff; text-align:center; margin-bottom:20px;">{data["title"]}</div>'
+            f'</div>',
             unsafe_allow_html=True,
         )
-        st.markdown(data["body"])
+        st.markdown(data["body_html"], unsafe_allow_html=True)
+
+        if data.get("has_name_input"):
+            st.markdown('<div style="color:#A7F3D0; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-top:16px; margin-bottom:6px;">What should we call you?</div>', unsafe_allow_html=True)
+            name_val = st.text_input(
+                "full_name",
+                value=st.session_state.pending_full_name,
+                placeholder="Enter your full name",
+                key="onboard_name_input",
+                label_visibility="collapsed",
+            )
+            if name_val:
+                st.session_state.pending_full_name = name_val
+
         dots = "".join(
             f'<span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:{"#10B981" if i == step else "#1a3530"}; margin:0 4px;"></span>'
             for i in range(len(ONBOARDING_STEPS))
@@ -222,6 +252,13 @@ def render_onboarding():
         with b2:
             if step < len(ONBOARDING_STEPS) - 1:
                 if st.button("Next →", use_container_width=True):
+                    if step == 0 and st.session_state.pending_full_name:
+                        try:
+                            get_authed_client().table("defense_lab_users").update(
+                                {"full_name": st.session_state.pending_full_name}
+                            ).eq("id", str(st.session_state.user.id)).execute()
+                        except Exception:
+                            pass
                     st.session_state.onboarding_step += 1
                     st.rerun()
             else:
@@ -324,6 +361,19 @@ def render_level_view(view_name, profile, progress):
         do_sign_out()
 
     st.markdown("<style>.stApp{background-color:#ffffff;}</style>", unsafe_allow_html=True)
+
+    bc1, bc2 = st.columns([1, 7])
+    with bc1:
+        if st.button("⬅ Hub", key=f"bc_{level_num}"):
+            st.session_state.view = "hub"
+            st.rerun()
+    with bc2:
+        st.markdown(
+            f'<div style="padding-top:6px; color:#64748B; font-size:13px;">'
+            f'Level {level_num} &nbsp;/&nbsp; {LEVEL_META[level_num-1]["name"]} &nbsp;·&nbsp; {LEVEL_META[level_num-1]["domain"]}'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
 
     if not is_unlocked:
         prev = LEVEL_META[level_num - 2]["name"]
