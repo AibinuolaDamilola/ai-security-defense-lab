@@ -41,6 +41,7 @@ for key, default in [
     ("user", None), ("access_token", None), ("refresh_token", None),
     ("view", "hub"), ("onboarding_step", 0), ("auth_error", ""), ("auth_success", ""),
     ("pending_full_name", ""), ("l1_completed", False),
+    ("l2_completed", False), ("l2_scan_run", False),
 ]:
     if key not in st.session_state:
         st.session_state[key] = default
@@ -62,9 +63,10 @@ def do_sign_up(email, password, full_name):
     try:
         result = supabase.auth.sign_up({"email": email, "password": password})
         if result.user:
-            get_authed_client().table("defense_lab_users").update(
-                {"full_name": full_name}
-            ).eq("id", str(result.user.id)).execute()
+            # Store name in session state — will be saved to Supabase during onboarding
+            # (sign_up client has no JWT yet so RLS would block a direct update here)
+            if full_name:
+                st.session_state.pending_full_name = full_name
             st.session_state.auth_success = "Account created! Check your email to confirm, then sign in."
         st.session_state.auth_error = ""
     except Exception as e:
@@ -105,8 +107,11 @@ def get_progress():
 
 def mark_onboarding_complete():
     try:
+        update_data = {"onboarding_complete": True}
+        if st.session_state.get("pending_full_name"):
+            update_data["full_name"] = st.session_state.pending_full_name
         get_authed_client().table("defense_lab_users").update(
-            {"onboarding_complete": True}
+            update_data
         ).eq("id", str(st.session_state.user.id)).execute()
     except Exception:
         pass
@@ -286,6 +291,18 @@ def render_hub(profile, progress):
     st.sidebar.markdown(f"**{display_name}**")
     st.sidebar.caption(st.session_state.user.email)
     st.sidebar.markdown("---")
+    if not profile.get("full_name"):
+        new_name = st.sidebar.text_input("Your name:", placeholder="Enter your full name", key="hub_name_input")
+        if st.sidebar.button("Save name", key="hub_save_name"):
+            if new_name.strip():
+                try:
+                    get_authed_client().table("defense_lab_users").update(
+                        {"full_name": new_name.strip()}
+                    ).eq("id", str(st.session_state.user.id)).execute()
+                    st.rerun()
+                except Exception:
+                    pass
+        st.sidebar.markdown("---")
     completed_count = sum(1 for p in progress.values() if p.get("completed"))
     st.sidebar.metric("Levels Completed", f"{completed_count} / 5")
     st.sidebar.markdown("---")
