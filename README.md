@@ -45,13 +45,13 @@ The lab is designed to take a complete beginner to production-level AI security 
 
 ## The 5 Levels at a Glance
 
-| Level | Company | Sector | Domain | Availability |
-|-------|---------|--------|--------|--------------|
-| 1 | MedVitals AI | HealthTech | Cloud Infrastructure Security | ✅ Open now |
-| 2 | DataForge ML | BioTech | AI Model Security | 🔜 Coming soon |
-| 3 | CartBot AI | E-Commerce | Application & API Security | 🔜 Coming soon |
-| 4 | PayGuard | FinTech | Data Security in AI | ✅ Open now |
-| 5 | LegalBot Municipal | GovTech | Agentic AI Security | ✅ Open now |
+| Level | Company | Sector | Domain | 
+|-------|---------|--------|--------|
+| 1 | MedVitals AI | HealthTech | Cloud Infrastructure Security  |
+| 2 | DataForge ML | BioTech | AI Model Security  |
+| 3 | CartBot AI | E-Commerce | Application & API Security |
+| 4 | PayGuard | FinTech | Data Security in AI |
+| 5 | LegalBot Municipal | GovTech | Agentic AI Security |
 
 Each level unlocks only after you complete the one before it. Level 1 is always open.
 
