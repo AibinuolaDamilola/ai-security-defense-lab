@@ -29,6 +29,7 @@ A free, open-source, hands-on AI security lab. Work through intentionally vulner
 
 ---
 
+
 ## What is AI Defense Lab?
 
 Most AI security resources are theory. This is not.
