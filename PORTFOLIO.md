@@ -1,8 +1,11 @@
 # AI Defense Lab — Portfolio
 
 **Student:** [Your Full Name]
+
 **GitHub:** [Your GitHub profile URL]
+
 **Hugging Face Space:** [Your HF Space URL]
+
 **Completed:** [Date]
 
 ---
