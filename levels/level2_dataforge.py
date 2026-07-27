@@ -128,13 +128,26 @@ def render_level2(user, supabase_client):
     with col1:
         st.markdown(
             '<div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">Genomics intelligence,<br>model integrity unknown.</div>'
-            '<div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">An intentionally vulnerable BioTech AI pipeline. Your job is to inspect the deployment code, audit the model source, scan the weights, and harden the pipeline before a compromised model reaches production.</div>'
-            '<div style="margin-top:18px;">'
-            '<span style="background:#6366F1; color:#fff; padding:10px 22px; border-radius:6px; font-weight:600; font-size:14px; margin-right:12px; display:inline-block;">Begin Audit</span>'
-            '<span style="border:1px solid #94A3B8; color:#475569; padding:10px 22px; border-radius:6px; font-weight:500; font-size:14px; display:inline-block;">View Brief</span>'
-            '</div>',
+            '<div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">An intentionally vulnerable BioTech AI pipeline. Your job is to inspect the deployment code, audit the model source, scan the weights, and harden the pipeline before a compromised model reaches production.</div>',
             unsafe_allow_html=True,
         )
+        with st.expander("📋 View Scenario Brief"):
+            st.markdown(
+                "**The Company**\n\n"
+                "DataForge ML supplies pre-trained genomics analysis models to healthcare research companies. "
+                "They download open-source foundation models from public Hugging Face repositories, fine-tune "
+                "them on proprietary biological datasets, and deploy them to client pipelines.\n\n"
+                "**What Happened**\n\n"
+                "The team pulled a model weight file from an unverified Hugging Face user account without "
+                "running any integrity checks. The model file uses the legacy pickle serialisation format, "
+                "which can execute arbitrary code at load time. The downloaded model contains a hidden payload "
+                "that executes when the model is loaded — giving an attacker persistent access to the "
+                "genomics pipeline including proprietary training data and all downstream client datasets.\n\n"
+                "**Your Three Tasks**\n\n"
+                "1. Inspect the deployment code and the source model repository — identify what is wrong.\n"
+                "2. Run the Picklescan tool below and interpret the output.\n"
+                "3. Fix model_loader.py by replacing pickle with safetensors and adding automated pre-load scanning."
+            )
     with col2:
         st.markdown(ILLUSTRATION_DATAFORGE, unsafe_allow_html=True)
 
