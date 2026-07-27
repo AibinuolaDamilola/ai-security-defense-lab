@@ -87,8 +87,8 @@ def render_cloudtrail_table(student_email):
             f'<div class="ct-cell" style="padding:10px 16px;color:#8B949E;font-family:monospace;font-size:12px;">{log["user_agent"]}</div>'
             f'<div class="ct-cell" style="padding:10px 16px;color:#E6EDF3;font-family:monospace;font-size:12px;word-break:break-all;">{esc(log["identity"])}</div>'
             '</summary>'
-            '<div style="background:#161B22;border-top:1px solid #30363D;padding:16px 20px;">'
-            f'<pre style="color:#A5D6FF;font-size:11px;line-height:1.7;margin:0;white-space:pre-wrap;font-family:Consolas,Monaco,monospace;">{json_esc}</pre>'
+            '<div style="background:#FFFFFF;border-top:1px solid #30363D;padding:16px 20px;">'
+            f'<pre style="color:#1E293B;font-size:11px;line-height:1.7;margin:0;white-space:pre-wrap;font-family:Consolas,Monaco,monospace;">{json_esc}</pre>'
             '</div>'
             '</details>'
         )
