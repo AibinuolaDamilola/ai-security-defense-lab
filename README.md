@@ -174,21 +174,24 @@ Build a Python Input/Output Schema Validator that rejects non-standard argument 
 
 Click the Fork button at the top of this page. GitHub creates an exact copy of the lab under your own account. This is your personal working copy — your name is on it from day one.
 
-**Step 2 — Deploy your fork to Hugging Face Spaces**
+**Step 2 — Deploy your Streamlit app space**
 
-Go to huggingface.co, create a free account, and create a new Space. Choose Docker then the Streamlit template. Connect it to your GitHub fork. Hugging Face deploys the app automatically. You now have a live, interactive lab running under your own name at zero cost.
+Go to share.streamlit.io. Sign in with your GitHub account. Click New app. Select your forked repository. Set app.py as the main file. Click Deploy. Streamlit will build your app — this takes about two minutes. When it finishes, you have your own personal lab URL, interactive lab running under your own name at zero cost.
 
 **Step 3 — Create your account and start Level 1**
 
-Open your Hugging Face Space URL. Create an account with your email. Level 1 — MedVitals AI — is immediately available.
+Your Streamlit app will open to the AI Defense Lab login page. Click Create Account. Use your email address. Verify your email when the confirmation arrives. Sign back in. You should now see the onboarding screen — Step 1 of 3
+
+Read every word of the onboarding. It tells you what this lab is, what you are here to do, and what you will have by the end. Do not skip it. 
+Then complete all three steps and arrive at your hub
 
 **Step 4 — Find the vulnerability, write the fix, commit the evidence**
 
-Read the scenario. Investigate the logs. Find what is broken. Open your fork in GitHub Codespaces (free, no local setup required), write the defensive code, and commit it with a clear message explaining what you changed and why. Your commit diff is your portfolio artifact.
+Read the scenario. Investigate the logs. Find what is broken.  Write your report.  Open your fork in GitHub Codespaces (free, no local setup required), write the defensive code, and commit it with a clear message explaining what you changed and why. Your commit diff is your portfolio artifact.
 
 **Step 5 — Mark complete and unlock the next level**
 
-Back in the lab app, type COMPLETE to confirm your work is submitted. The next level unlocks. Repeat for all five levels.
+Back in the lab app, submit the reqiured url. The next level unlocks. Repeat for all five levels.
 
 By Level 5 you have five GitHub commits, each one documenting a different AI security defence skill, all under your own name on a public repo that any recruiter can inspect.
 
@@ -204,7 +207,7 @@ Fill in [PORTFOLIO.md](PORTFOLIO.md) as you complete each level. The template gi
 
 - **Frontend:** Python · Streamlit
 - **Auth and Database:** Supabase (email auth · PostgreSQL with RLS)
-- **Hosting:** Hugging Face Spaces (Docker)
+- **Streamlit:** Streamlit app
 - **Student Workspace:** GitHub Codespaces (free)
 - **Security Tools Across Levels:** AWS CloudTrail · Picklescan · Pydantic · Llama Guard · OWASP LLM Top 10
 
