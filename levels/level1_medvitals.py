@@ -1,27 +1,49 @@
 import streamlit as st
+import json
 
 ILLUSTRATION_MEDVITALS = '<svg viewBox="0 0 320 240" width="100%" height="220"><circle cx="160" cy="120" r="110" fill="#ECFDF5"/><rect x="90" y="90" width="140" height="110" fill="#0F172A" rx="4"/><polygon points="90,90 160,50 230,90" fill="#10B981"/><rect x="150" y="58" width="20" height="20" fill="#10B981"/><rect x="142" y="66" width="36" height="6" fill="#10B981"/><rect x="110" y="120" width="24" height="24" fill="#fff"/><rect x="146" y="120" width="24" height="24" fill="#fff"/><rect x="182" y="120" width="24" height="24" fill="#fff"/><rect x="110" y="156" width="24" height="24" fill="#fff"/><rect x="146" y="156" width="24" height="24" fill="#fff"/><rect x="182" y="156" width="24" height="24" fill="#fff"/><rect x="148" y="180" width="24" height="20" fill="#94A3B8"/><polyline points="20,210 60,210 75,180 90,230 105,150 120,210 300,210" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="245" cy="150" r="12" fill="#F1C9A6"/><rect x="233" y="162" width="24" height="40" rx="6" fill="#0EA5E9"/><circle cx="275" cy="160" r="11" fill="#E8B589"/><rect x="264" y="171" width="22" height="36" rx="6" fill="#CBD5E1"/></svg>'
 
-# 16 realistic CloudTrail log entries — no highlighting, no hints
-# Students must scan and identify the IoC themselves
+# 17 realistic CloudTrail log entries — no highlighting, students find the IoC
 CLOUDTRAIL_LOGS = [
-    {"event_time": "2026-06-29 23:01:44 UTC", "event_name": "GetObject",             "source_ip": "10.0.4.22",      "user_agent": "aws-sdk-java/1.11.0",     "identity": "medvitals-app-prod"},
-    {"event_time": "2026-06-29 23:14:09 UTC", "event_name": "DescribeSecurityGroups","source_ip": "10.0.4.22",      "user_agent": "aws-cli/2.13.0",          "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-29 23:47:33 UTC", "event_name": "GetBucketPolicy",        "source_ip": "10.0.4.22",      "user_agent": "aws-sdk-python/1.26.0",   "identity": "medvitals-app-prod"},
-    {"event_time": "2026-06-30 00:12:55 UTC", "event_name": "PutBucketLogging",       "source_ip": "10.0.4.22",      "user_agent": "aws-cli/2.13.0",          "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 00:51:17 UTC", "event_name": "DescribeInstances",      "source_ip": "10.0.4.22",      "user_agent": "aws-cli/2.13.0",          "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 01:03:28 UTC", "event_name": "GetObject",              "source_ip": "10.0.4.22",      "user_agent": "aws-sdk-java/1.11.0",     "identity": "medvitals-app-prod"},
-    {"event_time": "2026-06-30 01:22:41 UTC", "event_name": "CreateLogGroup",         "source_ip": "10.0.4.22",      "user_agent": "aws-cli/2.13.0",          "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 01:58:03 UTC", "event_name": "DescribeLogStreams",      "source_ip": "10.0.4.22",      "user_agent": "aws-sdk-python/1.26.0",   "identity": "medvitals-app-prod"},
-    {"event_time": "2026-06-30 02:05:19 UTC", "event_name": "ListRoles",              "source_ip": "10.0.4.22",      "user_agent": "aws-cli/2.13.0",          "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 02:14:11 UTC", "event_name": "ConsoleLogin",           "source_ip": "10.0.4.22",      "user_agent": "Mozilla/5.0 (Windows)",   "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 02:14:45 UTC", "event_name": "DescribeInstances",      "source_ip": "10.0.4.22",      "user_agent": "aws-cli/2.13.0",          "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 02:38:04 UTC", "event_name": "GetBucketAcl",           "source_ip": "10.0.4.22",      "user_agent": "aws-sdk-python/1.26.0",   "identity": "medvitals-app-prod"},
-    {"event_time": "2026-06-30 02:55:33 UTC", "event_name": "UpdateFunctionCode",     "source_ip": "10.0.4.22",      "user_agent": "aws-cli/2.13.0",          "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 03:02:09 UTC", "event_name": "AssumeRole",             "source_ip": "198.51.100.45",  "user_agent": "python-requests/2.28.1",  "identity": "medvitals-deploy-bot → arn:aws:iam::000000000000:role/AdminFullAccess"},
-    {"event_time": "2026-06-30 03:02:31 UTC", "event_name": "ListBuckets",            "source_ip": "198.51.100.45",  "user_agent": "python-requests/2.28.1",  "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 03:03:02 UTC", "event_name": "PutObject",              "source_ip": "198.51.100.45",  "user_agent": "python-requests/2.28.1",  "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 03:04:18 UTC", "event_name": "GetObject",              "source_ip": "198.51.100.45",  "user_agent": "python-requests/2.28.1",  "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-29 23:01:44 UTC", "event_name": "GetObject",              "source_ip": "10.0.4.22",     "user_agent": "aws-sdk-java/1.11.0",    "identity": "medvitals-app-prod"},
+    {"event_time": "2026-06-29 23:14:09 UTC", "event_name": "DescribeSecurityGroups", "source_ip": "10.0.4.22",     "user_agent": "aws-cli/2.13.0",         "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-29 23:47:33 UTC", "event_name": "GetBucketPolicy",         "source_ip": "10.0.4.22",     "user_agent": "aws-sdk-python/1.26.0",  "identity": "medvitals-app-prod"},
+    {"event_time": "2026-06-30 00:12:55 UTC", "event_name": "PutBucketLogging",        "source_ip": "10.0.4.22",     "user_agent": "aws-cli/2.13.0",         "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 00:51:17 UTC", "event_name": "DescribeInstances",       "source_ip": "10.0.4.22",     "user_agent": "aws-cli/2.13.0",         "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 01:03:28 UTC", "event_name": "GetObject",               "source_ip": "10.0.4.22",     "user_agent": "aws-sdk-java/1.11.0",    "identity": "medvitals-app-prod"},
+    {"event_time": "2026-06-30 01:22:41 UTC", "event_name": "CreateLogGroup",          "source_ip": "10.0.4.22",     "user_agent": "aws-cli/2.13.0",         "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 01:58:03 UTC", "event_name": "DescribeLogStreams",       "source_ip": "10.0.4.22",     "user_agent": "aws-sdk-python/1.26.0",  "identity": "medvitals-app-prod"},
+    {"event_time": "2026-06-30 02:05:19 UTC", "event_name": "ListRoles",               "source_ip": "10.0.4.22",     "user_agent": "aws-cli/2.13.0",         "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 02:14:11 UTC", "event_name": "ConsoleLogin",            "source_ip": "10.0.4.22",     "user_agent": "Mozilla/5.0 (Windows)",  "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 02:14:45 UTC", "event_name": "DescribeInstances",       "source_ip": "10.0.4.22",     "user_agent": "aws-cli/2.13.0",         "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 02:38:04 UTC", "event_name": "GetBucketAcl",            "source_ip": "10.0.4.22",     "user_agent": "aws-sdk-python/1.26.0",  "identity": "medvitals-app-prod"},
+    {"event_time": "2026-06-30 02:55:33 UTC", "event_name": "UpdateFunctionCode",      "source_ip": "10.0.4.22",     "user_agent": "aws-cli/2.13.0",         "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 03:02:09 UTC", "event_name": "AssumeRole",              "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot → arn:aws:iam::000000000000:role/AdminFullAccess"},
+    {"event_time": "2026-06-30 03:02:31 UTC", "event_name": "ListBuckets",             "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 03:03:02 UTC", "event_name": "PutObject",               "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 03:04:18 UTC", "event_name": "GetObject",               "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot"},
+]
+
+# Full JSON records for each event — shown in expandable detail rows
+CLOUDTRAIL_DETAILS = [
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/medvitals-app-role/session-prod","accountId":"000000000000","sessionContext":{"sessionIssuer":{"type":"Role","userName":"medvitals-app-prod"}}},"eventTime":"2026-06-29T23:01:44Z","eventSource":"s3.amazonaws.com","eventName":"GetObject","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-sdk-java/1.11.0","requestParameters":{"bucketName":"medvitals-patient-records","key":"configs/app_config.json"},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000001","eventID":"evt-0001"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-29T23:14:09Z","eventSource":"ec2.amazonaws.com","eventName":"DescribeSecurityGroups","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-cli/2.13.0","requestParameters":{"filterSet":{"items":[{"name":"vpc-id","valueSet":{"items":[{"value":"vpc-0abc1234def56789a"}]}}]}},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000002","eventID":"evt-0002"},
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/medvitals-app-role/session-prod","accountId":"000000000000"},"eventTime":"2026-06-29T23:47:33Z","eventSource":"s3.amazonaws.com","eventName":"GetBucketPolicy","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-sdk-python/1.26.0","requestParameters":{"bucketName":"medvitals-patient-records"},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000003","eventID":"evt-0003"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T00:12:55Z","eventSource":"s3.amazonaws.com","eventName":"PutBucketLogging","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-cli/2.13.0","requestParameters":{"bucketName":"medvitals-patient-records","bucketLoggingStatus":{"loggingEnabled":{"targetBucket":"medvitals-access-logs","targetPrefix":"s3-access/"}}},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000004","eventID":"evt-0004"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T00:51:17Z","eventSource":"ec2.amazonaws.com","eventName":"DescribeInstances","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-cli/2.13.0","requestParameters":{"filterSet":{"items":[{"name":"tag:Environment","valueSet":{"items":[{"value":"production"}]}}]}},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000005","eventID":"evt-0005"},
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/medvitals-app-role/session-prod","accountId":"000000000000"},"eventTime":"2026-06-30T01:03:28Z","eventSource":"s3.amazonaws.com","eventName":"GetObject","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-sdk-java/1.11.0","requestParameters":{"bucketName":"medvitals-patient-records","key":"patient-data/intake-forms/form-00441.json"},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000006","eventID":"evt-0006"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T01:22:41Z","eventSource":"logs.amazonaws.com","eventName":"CreateLogGroup","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-cli/2.13.0","requestParameters":{"logGroupName":"/medvitals/api/prod"},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000007","eventID":"evt-0007"},
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/medvitals-app-role/session-prod","accountId":"000000000000"},"eventTime":"2026-06-30T01:58:03Z","eventSource":"logs.amazonaws.com","eventName":"DescribeLogStreams","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-sdk-python/1.26.0","requestParameters":{"logGroupName":"/medvitals/api/prod","orderBy":"LastEventTime","descending":True},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000008","eventID":"evt-0008"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T02:05:19Z","eventSource":"iam.amazonaws.com","eventName":"ListRoles","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-cli/2.13.0","requestParameters":{"pathPrefix":"/"},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000009","eventID":"evt-0009"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T02:14:11Z","eventSource":"signin.amazonaws.com","eventName":"ConsoleLogin","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64)","requestParameters":None,"responseElements":{"ConsoleLogin":"Success"},"errorCode":None,"requestID":"A1B2C3000010","eventID":"evt-0010"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T02:14:45Z","eventSource":"ec2.amazonaws.com","eventName":"DescribeInstances","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-cli/2.13.0","requestParameters":{"filterSet":{"items":[{"name":"instance-state-name","valueSet":{"items":[{"value":"running"}]}}]}},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000011","eventID":"evt-0011"},
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/medvitals-app-role/session-prod","accountId":"000000000000"},"eventTime":"2026-06-30T02:38:04Z","eventSource":"s3.amazonaws.com","eventName":"GetBucketAcl","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-sdk-python/1.26.0","requestParameters":{"bucketName":"medvitals-patient-records"},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000012","eventID":"evt-0012"},
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T02:55:33Z","eventSource":"lambda.amazonaws.com","eventName":"UpdateFunctionCode","awsRegion":"us-east-1","sourceIPAddress":"10.0.4.22","userAgent":"aws-cli/2.13.0","requestParameters":{"functionName":"medvitals-triage-processor","s3Bucket":"medvitals-deployments","s3Key":"lambda/triage-processor-v2.4.1.zip"},"responseElements":{"functionName":"medvitals-triage-processor","functionArn":"arn:aws:lambda:us-east-1:000000000000:function:medvitals-triage-processor","lastModified":"2026-06-30T02:55:34.000Z"},"errorCode":None,"requestID":"A1B2C3000013","eventID":"evt-0013"},
+    # Attack events below
+    {"eventVersion":"1.08","userIdentity":{"type":"IAMUser","arn":"arn:aws:iam::000000000000:user/medvitals-deploy-bot","accountId":"000000000000","userName":"medvitals-deploy-bot"},"eventTime":"2026-06-30T03:02:09Z","eventSource":"sts.amazonaws.com","eventName":"AssumeRole","awsRegion":"us-east-1","sourceIPAddress":"198.51.100.45","userAgent":"python-requests/2.28.1","requestParameters":{"roleArn":"arn:aws:iam::000000000000:role/AdminFullAccess","roleSessionName":"automation-session-1751249729","durationSeconds":3600},"responseElements":{"credentials":{"accessKeyId":"ASIA-TEMP-SESSION-KEY-9988","expiration":"2026-06-30T04:02:09Z","sessionToken":"[REDACTED FOR SECURITY]"},"assumedRoleUser":{"assumedRoleId":"AROAT4ADMINROLEID:automation-session-1751249729","arn":"arn:aws:sts::000000000000:assumed-role/AdminFullAccess/automation-session-1751249729"}},"errorCode":None,"requestID":"A1B2C3000014","eventID":"evt-0014"},
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/AdminFullAccess/automation-session-1751249729","accountId":"000000000000","sessionContext":{"sessionIssuer":{"type":"Role","arn":"arn:aws:iam::000000000000:role/AdminFullAccess","userName":"AdminFullAccess"}}},"eventTime":"2026-06-30T03:02:31Z","eventSource":"s3.amazonaws.com","eventName":"ListBuckets","awsRegion":"us-east-1","sourceIPAddress":"198.51.100.45","userAgent":"python-requests/2.28.1","requestParameters":None,"responseElements":{"buckets":{"items":[{"name":"medvitals-patient-records","creationDate":"2025-11-14T09:22:31.000Z"},{"name":"medvitals-deployments","creationDate":"2025-11-14T09:23:05.000Z"},{"name":"medvitals-access-logs","creationDate":"2025-11-14T09:23:44.000Z"},{"name":"medvitals-model-weights","creationDate":"2026-01-08T14:11:22.000Z"}]}},"errorCode":None,"requestID":"A1B2C3000015","eventID":"evt-0015"},
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/AdminFullAccess/automation-session-1751249729","accountId":"000000000000"},"eventTime":"2026-06-30T03:03:02Z","eventSource":"s3.amazonaws.com","eventName":"PutObject","awsRegion":"us-east-1","sourceIPAddress":"198.51.100.45","userAgent":"python-requests/2.28.1","requestParameters":{"bucketName":"medvitals-patient-records","key":"__exfil__/bulk-export-20260630.tar.gz","x-amz-server-side-encryption":"None"},"responseElements":{"x-amz-id-2":"EXAMPLE123456789","ETag":"\"d41d8cd98f00b204e9800998ecf8427e\""},"errorCode":None,"requestID":"A1B2C3000016","eventID":"evt-0016"},
+    {"eventVersion":"1.08","userIdentity":{"type":"AssumedRole","arn":"arn:aws:sts::000000000000:assumed-role/AdminFullAccess/automation-session-1751249729","accountId":"000000000000"},"eventTime":"2026-06-30T03:04:18Z","eventSource":"s3.amazonaws.com","eventName":"GetObject","awsRegion":"us-east-1","sourceIPAddress":"198.51.100.45","userAgent":"python-requests/2.28.1","requestParameters":{"bucketName":"medvitals-patient-records","key":"__exfil__/bulk-export-20260630.tar.gz"},"responseElements":None,"errorCode":None,"requestID":"A1B2C3000017","eventID":"evt-0017"},
 ]
 
 
@@ -33,18 +55,14 @@ def render_cloudtrail_table(student_email):
         '<div style="color:#8B949E; font-size:12px;">Filter: Last 24 hours &nbsp;·&nbsp; Region: us-east-1</div>'
         '</div>'
         '<table style="width:100%; border-collapse:collapse; font-family:monospace; font-size:12px;">'
-        '<thead>'
-        '<tr style="background:#161B22; color:#8B949E; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">'
+        '<thead><tr style="background:#161B22; color:#8B949E; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">'
         '<th style="padding:10px 16px; text-align:left; border-bottom:1px solid #30363D;">Event Time</th>'
         '<th style="padding:10px 16px; text-align:left; border-bottom:1px solid #30363D;">Event Name</th>'
         '<th style="padding:10px 16px; text-align:left; border-bottom:1px solid #30363D;">Source IP</th>'
         '<th style="padding:10px 16px; text-align:left; border-bottom:1px solid #30363D;">User Agent</th>'
         '<th style="padding:10px 16px; text-align:left; border-bottom:1px solid #30363D;">Identity / Resource</th>'
-        '</tr>'
-        '</thead>'
-        '<tbody>'
+        '</tr></thead><tbody>'
     )
-
     rows = ""
     for log in CLOUDTRAIL_LOGS:
         rows += (
@@ -56,20 +74,24 @@ def render_cloudtrail_table(student_email):
             f'<td style="padding:10px 16px; color:#E6EDF3; max-width:280px; word-break:break-all;">{log["identity"]}</td>'
             f'</tr>'
         )
-
     footer = (
-        f'<tr><td colspan="5" style="padding:8px 16px; color:#8B949E; font-size:11px; '
-        f'background:#161B22; border-top:1px solid #30363D;">Showing {len(CLOUDTRAIL_LOGS)} events '
-        f'· Student: {student_email}</td></tr>'
+        f'<tr><td colspan="5" style="padding:8px 16px; color:#8B949E; font-size:11px; background:#161B22; border-top:1px solid #30363D;">'
+        f'Showing {len(CLOUDTRAIL_LOGS)} events · Student: {student_email}</td></tr>'
         '</tbody></table></div>'
     )
-
     st.markdown(header + rows + footer, unsafe_allow_html=True)
+
+    # Expandable event detail rows
+    st.markdown('<div style="margin-top:12px; font-size:13px; color:#475569; font-weight:500;">▼ Expand individual events for full JSON record</div>', unsafe_allow_html=True)
+    for i, (log, detail) in enumerate(zip(CLOUDTRAIL_LOGS, CLOUDTRAIL_DETAILS)):
+        label = f"{log['event_time']}  ·  {log['event_name']}  ·  {log['source_ip']}"
+        with st.expander(label):
+            st.json(detail)
 
 
 def render_level1(user, supabase_client):
 
-    # Check if already completed in Supabase
+    # Check completion
     if not st.session_state.get("l1_completed"):
         try:
             result = supabase_client.table("defense_lab_progress").select("completed").eq(
@@ -108,13 +130,25 @@ def render_level1(user, supabase_client):
     with col1:
         st.markdown(
             '<div style="font-size:32px; font-weight:800; color:#0F172A; line-height:1.3;">Healthcare, connected<br>and compromised.</div>'
-            '<div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">An intentionally vulnerable AI triage platform. Your job is to find the breach, trace it in the logs, and harden the infrastructure before the next attack.</div>'
-            '<div style="margin-top:18px;">'
-            '<span style="background:#10B981; color:#fff; padding:10px 22px; border-radius:6px; font-weight:600; font-size:14px; margin-right:12px; display:inline-block;">Begin Audit</span>'
-            '<span style="border:1px solid #94A3B8; color:#475569; padding:10px 22px; border-radius:6px; font-weight:500; font-size:14px; display:inline-block;">View Brief</span>'
-            '</div>',
+            '<div style="font-size:14px; color:#475569; margin-top:12px; max-width:420px;">An intentionally vulnerable AI triage platform. Your job is to find the breach, trace it in the logs, and harden the infrastructure before the next attack.</div>',
             unsafe_allow_html=True,
         )
+        with st.expander("📋 View Scenario Brief"):
+            st.markdown(
+                "**The Company**\n\n"
+                "MedVitals AI is a high-growth HealthTech startup that allows patients to text an AI triage nurse. "
+                "Their platform processes thousands of clinical conversations daily and stores patient records in a cloud database connected to an LLM backend.\n\n"
+                "**What Happened**\n\n"
+                "The engineering team was racing to hit an investor funding deadline. In the rush, a developer "
+                "hardcoded live AWS credentials directly inside the Python deployment wrapper and pushed it to a "
+                "public repository. The IAM service account was configured with a wildcard permission policy "
+                "granting full administrative access to the entire cloud account. "
+                "An automated scanner harvested the credentials from the public commit within hours.\n\n"
+                "**Your Three Tasks**\n\n"
+                "1. Parse the CloudTrail logs below. Identify the exact indicator of compromise (IoC) and write a formal Incident Timeline Report.\n"
+                "2. Fix the credential exposure in the deployment repository — move secrets to environment variables.\n"
+                "3. Rewrite the IAM policy to enforce Principle of Least Privilege."
+            )
     with col2:
         st.markdown(ILLUSTRATION_MEDVITALS, unsafe_allow_html=True)
 
@@ -128,10 +162,9 @@ def render_level1(user, supabase_client):
 
     st.markdown("---")
 
-    # Deployment files — no hints, no labels, looks like real repo files
+    # Deployment Repository — no hints
     st.markdown("#### Deployment Repository")
     st.caption("The following files were found in the MedVitals AI GitHub repository.")
-
     tab1, tab2 = st.tabs(["config.py", "deploy-role-policy.json"])
     with tab1:
         st.code(
@@ -176,9 +209,9 @@ def render_level1(user, supabase_client):
 
     st.markdown("---")
 
-    # CloudTrail — no hints, full 17 entries, students find IoC themselves
+    # CloudTrail table with expandable rows
     st.markdown("#### AWS CloudTrail — Event History")
-    st.caption("A breach occurred last night. Parse the logs below, identify the indicator of compromise (IoC), and write your Incident Timeline Report.")
+    st.caption("A breach occurred last night. Parse the logs below, identify the indicator of compromise (IoC), and write your Incident Timeline Report. Click any event to expand its full JSON record.")
     render_cloudtrail_table(user.email)
 
     st.markdown("---")
