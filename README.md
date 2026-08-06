@@ -99,7 +99,20 @@ The downloaded model contains a pickled payload that executes a reverse shell wh
 Stolen genomics research data represents years of R&D investment. The compromised inference server can silently corrupt model outputs, producing incorrect biological analysis results that propagate to medical research without detection.
 
 **Your Task**
-Run Picklescan against the malicious model file and interpret the scan output. Replace the unsafe pickle loading with safetensors. Add automated pre-deployment model scanning to the pipeline. Document the supply chain breach.
+Audit the supply chain
+Inspect model_loader.py and the source Hugging Face repository. Identify the four supply chain red flags — unverified account, no model card, no checksum, legacy .pkl format.
+
+Run the live scan
+Run Picklescan yourself in your Codespace terminal against models/genomics_analyzer_v2.pkl. Interpret the output — identify the threat type, the dangerous global detected, and what it means for production deployment.
+
+Threat Model the vulnerability
+Map your findings to the relevant framework. For AI model security the correct framework is MITRE ATLAS not STRIDE — STRIDE is for system architecture, ATLAS is specifically for AI/ML attack vectors. The relevant ATLAS tactic here is AML.T0010 — ML Supply Chain Compromise. Students should document: what the attacker did, which ATLAS tactic it maps to, and what the business impact is if this reaches production.
+
+Remediate the pipeline
+Replace pickle.load() with safetensors safe loading. Add automated Picklescan as a pre-load check inside model_loader.py so no model reaches inference without being scanned first.
+
+Document and commit
+Complete the Model Threat Assessment template in the lab. Commit the fixed model_loader.py to GitHub. Submit both links.
 
 **Skills you will demonstrate:** Model supply chain security · Pickle exploit detection · Safetensors · Automated integrity verification
 
