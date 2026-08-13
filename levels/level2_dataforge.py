@@ -114,7 +114,7 @@ def render_level2(user, supabase_client):
     # Section 1: Deployment Repository
     st.markdown("#### Deployment Repository")
     st.caption("The following files were found in the DataForge ML GitHub repository.")
-    tab1, tab2 = st.tabs(["model_loader.py", "requirements.txt"])
+    tab1, tab2, tab3 = st.tabs(["model_loader.py", "requirements.txt", "model_loader_hardened.py"])
     with tab1:
         st.code(
             '# model_loader.py\n'
@@ -155,6 +155,18 @@ def render_level2(user, supabase_client):
             'numpy==1.24.3\npandas==2.0.1\nscikit-learn==1.3.0\n'
             'requests==2.31.0\nhuggingface-hub==0.16.4\nbiopython==1.81\ntorch==2.0.1',
             language="text",
+        )
+    with tab3:
+        st.caption("This is your workspace. Open levels/level2_dataforge.py in your forked Codespace and replace this placeholder with your hardened version.")
+        st.code(
+            '# model_loader_hardened.py\n'
+            '# DataForge ML — Genomics Analysis Pipeline\n'
+            '#\n'
+            '# This is your workspace.\n'
+            '# Open levels/level2_dataforge.py in your forked Codespace.\n'
+            '# Replace this placeholder with your hardened version of model_loader.py.\n'
+            '# Your commit showing this change is your Level 2 portfolio evidence.',
+            language="python",
         )
 
     st.markdown("---")
@@ -211,14 +223,14 @@ def render_level2(user, supabase_client):
         '<th style="padding:10px 14px; text-align:left; color:#64748B; border-bottom:1px solid #E2E8F0; width:35%;">Field</th>'
         '<th style="padding:10px 14px; text-align:left; color:#64748B; border-bottom:1px solid #E2E8F0;">Your Finding</th>'
         '</tr></thead><tbody>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Model File</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Source Repository</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Serialisation Format</td><td style="padding:10px 14px; color:#EF4444; font-style:italic;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threats Detected</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threat Type</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Supply Chain Risk Factors</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Business Impact</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;"></td></tr>'
-        '<tr><td style="padding:10px 14px; color:#374151; font-weight:500;">Remediation Plan</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;"></td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Model File</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;">genomics_analyzer_v2.pkl</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Source Repository</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;">logix-community/genomics-analyzer-v2</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Serialisation Format</td><td style="padding:10px 14px; color:#EF4444; font-style:italic;">.pkl (pickle — legacy, unsafe)</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threats Detected</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;">[Enter count from your scan output]</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threat Type</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;">[Enter dangerous global/import from scan]</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Supply Chain Risk Factors</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;">[Unverified account / No checksum / No model card / .pkl format]</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Business Impact</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;">[What could an attacker do if this model loaded in production?]</td></tr>'
+        '<tr><td style="padding:10px 14px; color:#374151; font-weight:500;">Remediation Plan</td><td style="padding:10px 14px; color:#6B7280; font-style:italic;">[How you fixed model_loader.py + what automated control you added]</td></tr>'
         '</tbody></table>'
         '<div style="margin-top:12px; font-size:11px; color:#94A3B8;">Complete this in a Google Doc, GitHub Gist, or Markdown file. You will paste the link below when submitting.</div>'
         '</div>',
