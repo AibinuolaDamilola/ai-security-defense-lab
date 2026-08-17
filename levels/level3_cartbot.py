@@ -2,7 +2,7 @@ import streamlit as st
 import json
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STUDENT TASK 5: Change SECURITY_STATUS to "PATCHED" after implementing
+# STUDENT TASK 6: Change SECURITY_STATUS to "PATCHED" after implementing
 # JWT token validation in api_config_hardened.py (Tab 3 below).
 # ─────────────────────────────────────────────────────────────────────────────
 SECURITY_STATUS = "VULNERABLE"
@@ -63,7 +63,7 @@ def render_level3(user, supabase_client):
     with col1:
         st.markdown('<div style="font-size:32px;font-weight:800;color:#0F172A;line-height:1.3;">AI shopping assistant,<br>no security boundaries.</div><div style="font-size:14px;color:#475569;margin-top:12px;max-width:420px;">An intentionally vulnerable e-commerce AI platform. Find the broken authentication, trigger the indirect injection, trace the data leakage, and fix the API layer.</div>', unsafe_allow_html=True)
         with st.expander("📋 View Scenario Brief"):
-            st.markdown("**The Company**\n\nCartBot AI is a fast-growing e-commerce platform where customers use an AI shopping assistant to discover products and check orders. The AI has direct API access with no meaningful security boundary.\n\n**What Happened**\n\nDuring a Q4 launch sprint, two critical shortcuts were taken. The API trusts a `customer_id` header with no cryptographic validation — any customer can spoof another customer's ID and access their orders. And an unverified seller has embedded a malicious instruction payload inside a product description field. When the AI reads that product, the injected instruction hijacks its behaviour, forcing it to retrieve and return all customer PII through the legitimate chat interface.\n\n**The Core Lesson**\n\nYou cannot secure an LLM by filtering prompts. The only robust defence is securing the underlying API. If the API enforces JWT token validation, the injection cannot succeed even if the LLM is fully compromised.\n\n**Your Five Tasks**\n\n1. Inspect the API configuration — identify the broken auth pattern.\n2. Interact with CartBot AI and trigger the indirect prompt injection.\n3. Demonstrate the BOLA vulnerability — access another customer's orders.\n4. Run Semgrep to catch the flaw with static analysis.\n5. Implement JWT validation, run the test script before and after, submit your report.")
+            st.markdown("**The Company**\n\nCartBot AI is a fast-growing e-commerce platform where customers use an AI shopping assistant to discover products and check orders. The AI has direct API access with no meaningful security boundary.\n\n**What Happened**\n\nDuring a Q4 launch sprint, two critical shortcuts were taken. The API trusts a `customer_id` header with no cryptographic validation — any customer can spoof another customer's ID and access their orders. And an unverified seller has embedded a malicious instruction payload inside a product description field. When the AI reads that product, the injected instruction hijacks its behaviour, forcing it to retrieve and return all customer PII through the legitimate chat interface.\n\n**The Core Lesson**\n\nYou cannot secure an LLM by filtering prompts. The only robust defence is securing the underlying API. If the API enforces JWT token validation, the injection cannot succeed even if the LLM is fully compromised.\n\n**Your Six Tasks**\n\n1. Inspect the API configuration — identify the broken auth pattern.\n2. Interact with CartBot AI and trigger the indirect prompt injection.\n3. Demonstrate the BOLA vulnerability — access another customer's orders.\n4. Run the Bulk Harvest simulation — observe the scale of exfiltration a scripted attacker achieves through the same flaw.\n5. Run Semgrep to catch the flaw with static analysis.\n6. Implement JWT validation, run the test script before and after, submit your report.")
     with col2:
         st.markdown(ILLUSTRATION_CARTBOT, unsafe_allow_html=True)
 
@@ -181,6 +181,47 @@ def render_level3(user, supabase_client):
             else:
                 st.error(f"No customer found with ID: {customer_id}")
 
+    st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
+    st.markdown("**Task 4 — Bulk Harvest Simulation.** A single lookup shows the flaw. This shows the scale — what happens when an attacker scripts it. Run this before completing your Threat Model.")
+    st.caption("📸 Screenshot the result panel below — this is evidence for your API Security Findings Report, the same as your before/after test script output.")
+
+    if st.button("⚠ Simulate Bulk Harvest Attack →", key="bulk_harvest_btn"):
+        probe_range = [str(n) for n in range(1000, 1011)]  # 1000–1010, includes the 3 real customers
+        if SECURITY_STATUS == "PATCHED":
+            st.markdown(
+                '<div style="background:#0F1A14;border:1px solid #10B981;border-radius:8px;padding:16px;margin-top:8px;">' +
+                '<div style="color:#10B981;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:10px;">🛡 BULK HARVEST — BLOCKED</div>' +
+                '<div style="color:#A7F3D0;font-size:13px;line-height:1.7;font-family:monospace;">' +
+                f'Probing customer_id 1000–1010 ({len(probe_range)} requests)...<br>' +
+                'Request 1 → HTTP 401 Unauthorized (JWT does not match session)<br>' +
+                'Request 2 → HTTP 401 Unauthorized<br>' +
+                'Request 3 → Rate limit threshold reached — remaining requests throttled<br><br>' +
+                '<strong style="color:#fff;">0 of 11 records exfiltrated.</strong> Server-side authorization ' +
+                'rejected every spoofed request before any customer data was touched.' +
+                '</div></div>',
+                unsafe_allow_html=True,
+            )
+        else:
+            found = [(cid, CUSTOMER_ORDERS[cid]) for cid in probe_range if cid in CUSTOMER_ORDERS]
+            rows = "".join(
+                f'{cid} → {c["name"]} ({c["email"]}) — {len(c["orders"])} order(s)<br>'
+                for cid, c in found
+            )
+            st.markdown(
+                '<div style="background:#1A0A0A;border:1px solid #EF4444;border-radius:8px;padding:16px;margin-top:8px;">' +
+                '<div style="color:#EF4444;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:10px;">⚠ BULK HARVEST — EXPLOIT SUCCESSFUL</div>' +
+                '<div style="color:#FCA5A5;font-size:13px;line-height:1.7;font-family:monospace;">' +
+                f'Probing customer_id 1000–1010 ({len(probe_range)} requests)...<br>' +
+                'No authorization check. No rate limiting. All requests succeeded.<br><br>' +
+                f'{rows}<br>' +
+                f'<strong style="color:#fff;">{len(found)} of {len(probe_range)} customer records exfiltrated in 0.4 seconds.</strong><br>' +
+                '<em style="color:#FCA5A5;font-size:11px;">This is what the single-lookup panel above does not show: an attacker does not ' +
+                'guess IDs one at a time. They script this loop and drain the table in under a second — ' +
+                'no throttling, no authorization check, no alert raised.</em>' +
+                '</div></div>',
+                unsafe_allow_html=True,
+            )
+
     st.markdown("---")
 
     st.markdown("#### Static Analysis — Run Semgrep in Your Codespace")
@@ -236,7 +277,8 @@ def render_level3(user, supabase_client):
             "2. Why can you not stop indirect prompt injection by filtering the AI's system prompt or outputs?\n"
             "3. What is the correct architectural defence against prompt injection on an AI API?\n"
             "4. How does MITRE ATLAS AML.T0051 relate to the OWASP LLM Top 10?\n"
-            "5. Where in a CI/CD pipeline would you place Semgrep and why?"
+            "5. Where in a CI/CD pipeline would you place Semgrep and why?\n"
+            "6. A single BOLA lookup and a scripted bulk harvest exploit the same flaw. Why does rate limiting matter even after JWT validation is in place — what is denial-of-wallet, and why is it an AI-specific cost concern beyond just data exposure?"
         )
 
     st.markdown("---")
@@ -250,12 +292,13 @@ def render_level3(user, supabase_client):
         return
 
     st.info(
-        "Before submitting confirm all five tasks are done:\n\n"
+        "Before submitting confirm all six tasks are done:\n\n"
         "1. **Identified all three vulnerabilities** in the API configuration.\n"
         "2. **Triggered the indirect prompt injection** and observed the customer data leak.\n"
         "3. **Demonstrated BOLA** by accessing another customer's orders.\n"
-        "4. **Run the test script before and after** your patch with screenshots.\n"
-        "5. **Implemented JWT validation** and written your API Security Findings Report."
+        "4. **Ran the Bulk Harvest simulation** and screenshotted the exfiltration-scale result.\n"
+        "5. **Run the test script before and after** your patch with screenshots.\n"
+        "6. **Implemented JWT validation** and written your API Security Findings Report."
     )
 
     commit_url = st.text_input("GitHub commit URL showing your api_config_hardened.py patch:", placeholder="https://github.com/your-username/ai-security-defense-lab/commit/abc123", key="l3_commit_url")
