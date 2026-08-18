@@ -84,7 +84,7 @@ Parse the CloudTrail logs to find the exact moment of compromise. Fix the creden
 
 ---
 
-### 🔵 Level 2 — DataForge ML · BioTech · AI Model Security *(Coming Soon)*
+### 🔵 Level 2 — DataForge ML · BioTech · AI Model Security
 
 **The Company**
 DataForge ML supplies pre-trained genomics analysis models to healthcare research companies. They download open-source foundation models from public repositories, fine-tune them on proprietary biological datasets, and deploy them to client pipelines.
@@ -118,24 +118,27 @@ Complete the Model Threat Assessment template in the lab. Commit the fixed model
 
 ---
 
-### 🟡 Level 3 — CartBot AI · E-Commerce · Application & API Security *(Coming Soon)*
+### 🟡 Level 3 — CartBot AI · E-Commerce · Application & API Security
 
 **The Company**
-CartBot AI is an e-commerce platform using an AI-powered customer service and product recommendation chatbot. The chatbot is exposed via a public REST API that any frontend application can call with a user-supplied message.
+CartBot AI is a fast-growing e-commerce platform where customers interact with an AI shopping assistant to discover products and check their orders. The AI has direct access to the order management API with no meaningful security boundary between what it can read and what it should expose.
 
 **The Problem**
-The API endpoint has no rate limiting, accepts input without validation, and returns raw model output directly to the user without any filtering layer. The system prompt that configures the chatbot's behaviour is not protected from user manipulation.
+Two critical shortcuts were taken during a Q4 launch sprint. First, the API trusts a customer_id header directly with no cryptographic token validation — any customer can change this value to access another customer's complete order history. Second, the AI assistant reads product descriptions directly into its context window with no sanitisation. An unverified seller has embedded a malicious instruction payload inside a product description field.
 
 **What Happened**
-An attacker sent a direct prompt injection payload through the API, overriding the system instructions and causing the model to return internal product pricing logic, supplier discount structures, and draft promotional copy that was never meant to be public. A separate attacker ran an automated script sending thousands of requests per minute, running up inference costs and degrading response times for real customers.
+When the AI reads the compromised product, the injected instruction hijacks its behaviour — forcing it to retrieve and return all customer PII through the legitimate chat interface, exploiting the broken authentication to access data it was never meant to expose. A classic BOLA flaw combined with indirect prompt injection creates a compound attack chain that neither control alone could produce.
 
 **Business Impact**
-Leaked internal pricing gives competitors a structural advantage. Unprotected inference costs can make an AI product commercially unviable. Without output filtering, the chatbot can be weaponised to return harmful or misleading content to real customers at scale.
+Full customer PII — names, emails, and order histories — is accessible to any user who queries the right product. The AI's legitimate API access becomes the exfiltration channel. Broken rate limiting exposes the platform to account enumeration and Denial of Wallet attacks that directly inflate inference costs.
+
+**The Core Lesson** 
+You cannot secure an LLM application by filtering prompts. The only robust defense is securing the underlying API layer. If the API enforces cryptographic token validation, the injection cannot succeed even if the LLM is fully compromised.
 
 **Your Task**
-Add API key authentication and rotation logic. Implement token-based rate limiting. Build a request validation middleware. Add output filtering to sanitise model responses before they reach the user. Document the API Security Audit.
+Interact with CartBot AI and trigger the indirect prompt injection. Demonstrate the BOLA vulnerability. Run Semgrep static analysis against the API configuration. Implement JWT token validation. Run the before-and-after test suite and document your API Security Findings Report.
 
-**Skills you will demonstrate:** AI API hardening · Rate limiting · Output filtering · Direct prompt injection defence · OWASP LLM Top 10
+**Skills you will demonstrate:** BOLA detection · Indirect prompt injection analysis · JWT token validation · Semgrep static analysis · OWASP API1:2023 · MITRE ATLAS AML.T0051 · AML.T0054
 
 ---
 
@@ -185,26 +188,80 @@ Build a Python Input/Output Schema Validator that rejects non-standard argument 
 
 **Step 1 — Fork this repository**
 
-Click the Fork button at the top of this page. GitHub creates an exact copy of the lab under your own account. This is your personal working copy — your name is on it from day one.
+Click the **Fork** button at the top of this page. 
 
-**Step 2 — Deploy your Streamlit app space**
+GitHub creates an exact copy of the lab under your own account. 
 
-Go to share.streamlit.io. Sign in with your GitHub account. Click New app. Select your forked repository. Set app.py as the main file. Click Deploy. Streamlit will build your app — this takes about two minutes. When it finishes, you have your own personal lab URL, interactive lab running under your own name at zero cost.
+This is your personal working copy — your name is on it from day one.
 
+
+
+**Step 2 — Deploy your fork to Streamlit Community Cloud**
+
+Go to [share.streamlit.io](https://share.streamlit.io) and sign in with your GitHub account. 
+
+Click **New app**. Select your forked repository. 
+
+Set `app.py` as the main file path. 
+
+Click **Deploy**. 
+
+Streamlit builds your app in about two minutes. 
+
+You now have your own personal lab running at a unique `.streamlit.app` URL at zero cost.
+
+
+ 
+**Step 2b — Enable automatic sync (one-time setup)**
+
+Go to your fork on GitHub → **Actions** tab → click **I understand my workflows, go ahead and enable them**. 
+
+Then click **Sync Fork with Upstream** → **Run workflow** → green **Run workflow** button. 
+
+This sets up daily automatic syncing so new levels and updates from the master repo flow into your fork without any manual work.
+
+
+ 
 **Step 3 — Create your account and start Level 1**
 
-Your Streamlit app will open to the AI Defense Lab login page. Click Create Account. Use your email address. Verify your email when the confirmation arrives. Sign back in. You should now see the onboarding screen — Step 1 of 3
+Open your Streamlit app URL. 
 
-Read every word of the onboarding. It tells you what this lab is, what you are here to do, and what you will have by the end. Do not skip it. 
-Then complete all three steps and arrive at your hub
+Click **Create Account** and register with your email.
 
+The onboarding guide walks you through what the lab is, how the levels work, and what your portfolio will look like by the end. 
+
+Read every step — it matters. 
+
+Then click **Enter the Lab** and start Level 1.
+
+
+ 
 **Step 4 — Find the vulnerability, write the fix, commit the evidence**
 
-Read the scenario. Investigate the logs. Find what is broken.  Write your report.  Open your fork in GitHub Codespaces (free, no local setup required), write the defensive code, and commit it with a clear message explaining what you changed and why. Your commit diff is your portfolio artifact.
+Read the scenario brief inside the level. 
 
-**Step 5 — Mark complete and unlock the next level**
+Investigate the logs and deployment files. 
 
-Back in the lab app, submit the reqiured url. The next level unlocks. Repeat for all five levels.
+Find what is broken. 
+
+Open your fork in GitHub Codespaces (free, no local setup required), write the defensive code, and commit it with a clear message explaining what you changed and why. 
+
+Your commit diff is your portfolio artifact.
+
+
+ 
+Each level has a full step-by-step walkthrough to guide you through the investigation and remediation:
+
+- Level 1 Walkthrough — [medium](https://medium.com/@CyberDammy/ai-security-defense-lab-part-1-bca2fc4ba074)
+- Level 2 Walkthrough — [medium](https://medium.com/@CyberDammy/ai-defense-lab-level-2-walkthrough-f0f810c93e5c?post)
+- Level 3 Walkthrough — coming soon
+- Level 3 Walkthrough — coming soon
+- Level 3 Walkthrough — coming soon
+  
+  
+**Step 5 — Submit your evidence and unlock the next level**
+Back in the lab app, paste your GitHub commit URL and your report link into the submission fields. The next level unlocks. Repeat for all five levels.
+
 
 By Level 5 you have five GitHub commits, each one documenting a different AI security defence skill, all under your own name on a public repo that any recruiter can inspect.
 
@@ -222,7 +279,7 @@ Fill in [PORTFOLIO.md](PORTFOLIO.md) as you complete each level. The template gi
 - **Auth and Database:** Supabase (email auth · PostgreSQL with RLS)
 - **Streamlit:** Streamlit app
 - **Student Workspace:** GitHub Codespaces (free)
-- **Security Tools Across Levels:** AWS CloudTrail · Picklescan · Pydantic · Llama Guard · OWASP LLM Top 10
+- **Security Tools Across Levels:** AWS CloudTrail · Picklescan · Semgrep . Pydantic · Llama Guard · OWASP LLM Top 10
 
 ---
 
@@ -259,7 +316,7 @@ If you want to contribute a new level, improve an existing scenario, or deepen t
 
 <img src="assets/hernetiq_logo.png" width="160" alt="HerNetIQ"/>
 
-AI Defense Lab is an open-source project by [HerNetIQ](https://hernetiq.com), built alongside the **AI Security Fellowship** — a 16-week programme training the next generation of AI security engineers.
+AI Defense Lab is an open-source project by [HerNetIQ](https://www.linkedin.com/company/hernetiq), built alongside the **AI Security Fellowship** — a 16-week programme training the next generation of AI security engineers.
 
 The fellowship teaches each domain in depth. The lab gives practitioners a place to keep practising long after the 16 weeks are done — and gives the wider security community a free, verifiable way to build and prove AI security defence skills.
 
@@ -270,3 +327,5 @@ The fellowship teaches each domain in depth. The lab gives practitioners a place
 ---
 
 MIT License
+
+Built with 💙 for Blue Team defenders everywhere
