@@ -5,6 +5,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: github.repository == 'AibinuolaDamilola/ai-security-defense-lab'
     steps:
       - uses: actions/checkout@v3
         with:
