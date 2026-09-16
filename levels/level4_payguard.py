@@ -52,8 +52,7 @@ def render_level4(user, supabase_client):
     st.markdown(
         '<div style="background:linear-gradient(135deg,#1E3A8A,#2563EB);border-radius:10px;padding:20px 28px;margin-bottom:24px;">' +
         '<div style="color:#BFDBFE;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">Level 4 · Data Security in AI</div>' +
-        '<div style="color:#fff;font-size:15px;margin-bottom:10px;"><strong>Guiding Question:</strong> How do we protect the data (RAG system and fine-tuning pipeline) that feeds, flows through, and is produced by the AI pipeline?
-where does the boundary actually need to live?</div>' +
+        '<div style="color:#fff;font-size:15px;margin-bottom:10px;"><strong>Guiding Question:</strong> How do we protect the data (RAG system and fine-tuning pipeline) that feeds, flows through, and is produced by the AI pipeline?</div>' +
         '<div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:12px;">' +
         '<div><div style="color:#BFDBFE;font-size:11px;font-weight:600;margin-bottom:4px;">HEADLINE TOOLS</div>' +
         '<div style="color:#fff;font-size:13px;">OWASP LLM09 & LLM05 · STRIDE · Vector DB Namespacing · Airflow · Semgrep</div></div>' +
