@@ -267,7 +267,7 @@ def render_level4(user, supabase_client):
     st.code("pip install semgrep", language="bash")
     st.markdown("**Run the scan (from your repo root):**")
     st.code("semgrep --config=.semgrep.yml .", language="bash")
-    st.markdown("The ruleset scopes itself automatically by file path — running it from repo root scans everything, but only PayGuard's fixtures trigger PayGuard's rules. You should see 4 findings across `rag_config.py` and `finetune_pipeline_dag.py`, each tagged with its OWASP LLM classification (LLM09 or LLM05). Note which CWE IDs appear — these go into your Data Security Findings Report.")
+    st.markdown("You should see 4 findings across `rag_config.py` and `finetune_pipeline_dag.py`, each tagged with its OWASP LLM classification (LLM09 or LLM05). Note which CWE IDs appear — these go into your Data Security Findings Report.")
 
     st.markdown("---")
 
