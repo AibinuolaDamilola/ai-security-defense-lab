@@ -2,6 +2,9 @@ rules:
   - id: cartbot-jwt-validation-disabled
     languages: [python]
     severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level3_cartbot/'
     message: >
       REQUIRE_JWT_VALIDATION is disabled. The API cannot cryptographically
       verify who a request actually belongs to, which directly enables
@@ -17,6 +20,9 @@ rules:
   - id: cartbot-customer-id-header-trusted
     languages: [python]
     severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level3_cartbot/'
     message: >
       TRUST_CUSTOMER_ID_HEADER is enabled. The API accepts a client-supplied
       customer_id at face value instead of verifying it against an
@@ -32,10 +38,77 @@ rules:
   - id: cartbot-rate-limiting-disabled
     languages: [python]
     severity: WARNING
+    paths:
+      include:
+        - '/fixtures/level3_cartbot/'
     message: >
       RATE_LIMIT_ENABLED is disabled. Without throttling, a scripted attacker
       can enumerate customer records and drive unbounded AI inference cost —
       a Denial of Wallet risk. See MITRE ATLAS AML.T0054.
+    metadata:
+      mitre-atlas: "AML.T0054 - LLM Data Exfiltration"
+      cwe: "CWE-770: Allocation of Resources Without Limits or Throttling"
+    patterns:
+      - pattern: RATE_LIMIT_ENABLED = False
+
+  - id: payguard-tenant-id-trusted
+    languages: [python]
+    severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level4_payguard/'
+    message: >
+      TRUST_CLIENT_TENANT_ID is enabled. The RAG system accepts a
+      client-supplied tenant_id at face value with no session verification,
+      allowing cross-tenant retrieval from the shared vector store.
+    metadata:
+      owasp: "LLM09:2026 - Vector and Embedding Weaknesses"
+      cwe: "CWE-639: Authorization Bypass Through User-Controlled Key"
+    patterns:
+      - pattern: TRUST_CLIENT_TENANT_ID = True
+
+  - id: payguard-metadata-filter-disabled
+    languages: [python]
+    severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level4_payguard/'
+    message: >
+      METADATA_FILTER_ENFORCED is disabled. The vector store has no
+      per-tenant namespace or partition — every query can retrieve any
+      client's documents regardless of who is asking.
+    metadata:
+      owasp: "LLM09:2026 - Vector and Embedding Weaknesses"
+      cwe: "CWE-284: Improper Access Control"
+    patterns:
+      - pattern: METADATA_FILTER_ENFORCED = False
+
+  - id: payguard-finetune-validation-disabled
+    languages: [python]
+    severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level4_payguard/'
+    message: >
+      VALIDATE_DATA_INTEGRITY is disabled in the fine-tuning pipeline. Training
+      data flows from source to model with no integrity check, allowing a
+      poisoned dataset to introduce a backdoor into the fine-tuned model.
+    metadata:
+      owasp: "LLM05:2026 - Data and Model Poisoning"
+      cwe: "CWE-345: Insufficient Verification of Data Authenticity"
+    patterns:
+      - pattern: VALIDATE_DATA_INTEGRITY = False
+
+  - id: payguard-rate-limiting-disabled
+    languages: [python]
+    severity: WARNING
+    paths:
+      include:
+        - '/fixtures/level4_payguard/'
+    message: >
+      RATE_LIMIT_ENABLED is disabled on the vector store. A scripted attacker
+      can drain the shared index across many simulated tenant_id values with
+      no throttling — a Denial of Wallet risk at the retrieval layer.
     metadata:
       mitre-atlas: "AML.T0054 - LLM Data Exfiltration"
       cwe: "CWE-770: Allocation of Resources Without Limits or Throttling"
