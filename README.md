@@ -51,7 +51,7 @@ The lab is designed to take a complete beginner to production-level AI security 
 | 2 | DataForge ML | BioTech | AI Model Security  |
 | 3 | CartBot AI | E-Commerce | Application & API Security |
 | 4 | PayGuard | FinTech | Data Security in AI |
-| 5 | LegalBot Municipal | GovTech | Agentic AI Security |
+| 5 | LegalBot Municipal | GovTech | Autonomous Agent Governance |
 
 Each level unlocks only after you complete the one before it. Level 1 is always open.
 
