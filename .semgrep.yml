@@ -114,3 +114,50 @@ rules:
       cwe: "CWE-770: Allocation of Resources Without Limits or Throttling"
     patterns:
       - pattern: RATE_LIMIT_ENABLED = False
+
+  - id: legalbot-finalize-permission-standing
+    languages: [python]
+    severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level5_legalbot/'
+    message: >
+      CAN_FINALIZE_DISMISSAL is enabled with no approval gate. The agent
+      holds standing authority to take an irreversible administrative
+      action, granting it more agency than its core task requires.
+    metadata:
+      owasp-agentic: "ASI03 - Identity & Privilege Abuse"
+      cwe: "CWE-269: Improper Privilege Management"
+    patterns:
+      - pattern: CAN_FINALIZE_DISMISSAL = True
+
+  - id: legalbot-approval-gate-disabled
+    languages: [python]
+    severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level5_legalbot/'
+    message: >
+      REQUIRE_HUMAN_APPROVAL is disabled. A hijacked agent goal can reach
+      an irreversible action with no human checkpoint able to intercept it.
+    metadata:
+      owasp-agentic: "ASI02 - Tool Misuse & Exploitation"
+      cwe: "CWE-862: Missing Authorization"
+    patterns:
+      - pattern: REQUIRE_HUMAN_APPROVAL = False
+
+  - id: legalbot-citizen-input-not-sanitized
+    languages: [python]
+    severity: ERROR
+    paths:
+      include:
+        - '/fixtures/level5_legalbot/'
+    message: >
+      SANITIZE_CITIZEN_INPUT is disabled. Citizen-submitted content is
+      passed directly into the agent's context window with no separation
+      between instructions and data, enabling Agent Goal Hijack.
+    metadata:
+      owasp-agentic: "ASI01 - Agent Goal Hijack"
+      cwe: "CWE-77: Improper Neutralization of Special Elements used in a Command"
+    patterns:
+      - pattern: SANITIZE_CITIZEN_INPUT = False
