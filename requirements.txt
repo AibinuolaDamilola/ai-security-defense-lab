@@ -1,2 +1,3 @@
 streamlit==1.58.0
 supabase
+huggingface-hub==0.27.0
