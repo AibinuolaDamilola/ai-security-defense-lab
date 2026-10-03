@@ -5,7 +5,7 @@ import json
 # STUDENT TASK 8: Change SECURITY_STATUS to "PATCHED" after implementing
 # database-level tenant isolation and fine-tuning data validation.
 # ─────────────────────────────────────────────────────────────────────────────
-SECURITY_STATUS = "VULNERABLE"
+SECURITY_STATUS = "PATCHED"
 
 ILLUSTRATION_PAYGUARD = '<svg viewBox="0 0 320 240" width="100%" height="220"><circle cx="160" cy="120" r="110" fill="#EFF6FF"/><rect x="130" y="60" width="60" height="80" rx="6" fill="#1E3A8A"/><circle cx="160" cy="90" r="14" fill="#3B82F6"/><rect x="145" y="110" width="30" height="4" rx="2" fill="#93C5FD"/><rect x="145" y="120" width="30" height="4" rx="2" fill="#93C5FD"/><rect x="40" y="150" width="70" height="50" rx="6" fill="#0F172A"/><text x="75" y="170" font-size="8" fill="#93C5FD" text-anchor="middle" font-family="monospace">Tenant A</text><text x="75" y="183" font-size="7" fill="#EF4444" text-anchor="middle" font-family="monospace">LEAKED →</text><rect x="210" y="150" width="70" height="50" rx="6" fill="#0F172A"/><text x="245" y="170" font-size="8" fill="#93C5FD" text-anchor="middle" font-family="monospace">Tenant B</text><line x1="110" y1="170" x2="150" y2="130" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,2"/><line x1="210" y1="170" x2="170" y2="130" stroke="#3B82F6" stroke-width="2"/><circle cx="160" cy="35" r="14" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/><text x="160" y="41" font-size="14" text-anchor="middle" fill="#EF4444">!</text><rect x="115" y="205" width="90" height="20" rx="4" fill="#1E293B"/><text x="160" y="219" font-size="7" fill="#93C5FD" text-anchor="middle" font-family="monospace">shared vector index</text></svg>'
 
