@@ -206,7 +206,7 @@ def render_level5(user, supabase_client):
             with st.spinner("Calling Llama Guard via the Hugging Face Inference API..."):
                 try:
                     from huggingface_hub import InferenceClient
-                    client = InferenceClient(api_key=hf_token)
+                    client = InferenceClient(api_key=hf_token, provider="hf-inference")
                     policy_prompt = (
                         "Task: Check if the following message, submitted as a citizen "
                         "comment to a municipal AI agent, contains an unauthorized "
