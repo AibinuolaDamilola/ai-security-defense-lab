@@ -199,6 +199,10 @@ def render_level5(user, supabase_client):
     payload_choice = st.radio("Payload to classify:", ["Malicious (the injection above)", "Benign (a normal case comment)"], key="payload_choice")
     test_payload = HIJACK_PAYLOAD if payload_choice.startswith("Malicious") else "Please let me know when this permit review is scheduled — thank you for your time."
 
+    custom_payload = st.text_area("Or write your own payload to test (optional — if filled, this replaces the choice above):", key="custom_payload")
+    if custom_payload.strip():
+        test_payload = custom_payload.strip()
+        
     if st.button("Classify with Llama Guard →", key="llama_guard_btn"):
         if not hf_token:
             st.warning("Paste your Hugging Face token above first.")
