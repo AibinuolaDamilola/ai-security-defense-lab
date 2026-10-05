@@ -268,7 +268,7 @@ Each level has a full step-by-step walkthrough to guide you through the investig
 - Level 2 Walkthrough — [medium](https://medium.com/@CyberDammy/ai-defense-lab-level-2-walkthrough-f0f810c93e5c?post)
 - Level 3 Walkthrough — [medium](https://medium.com/@CyberDammy/ai-security-defense-lab-level-3-dd902cf407c9?sharedUserId=CyberDammy)
 - Level 4 Walkthrough — [medium](https://medium.com/@CyberDammy/ai-defense-lab-level-4-walkthrough-a09a85901c96?postPublishedType=repub)
-- Level 5 Walkthrough — coming soon
+- Level 5 Walkthrough — [medium](https://medium.com/@CyberDammy/ai-defense-lab-level-5-walkthrough-b99b016a9fd7?postPublishedType=repub)
   
   
 **Step 5 — Submit your evidence and unlock the next level**
