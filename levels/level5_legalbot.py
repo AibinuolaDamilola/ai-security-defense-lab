@@ -168,7 +168,7 @@ def render_level5(user, supabase_client):
     st.code("pip install semgrep", language="bash")
     st.markdown("**Run the scan (from your repo root):**")
     st.code("semgrep --config=.semgrep.yml .", language="bash")
-    st.markdown("You should see 3 findings in `agent_config.py`, each tagged with its Agentic Top 10 classification (ASI01, ASI02, or ASI03).")
+    st.markdown("You should see 3 findings in `agent_config.py`).")
 
     st.markdown("---")
 
