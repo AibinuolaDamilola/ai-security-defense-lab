@@ -170,19 +170,48 @@ def render_level1(user, supabase_client):
     with tab1:
         st.code(
             '# config.py\n# MedVitals AI — Production Environment Configuration\n# Maintained by: engineering-team@medvitals.ai\n# Last updated: 2026-05-14\n\n'
-            'import os\n\nAPP_ENV = "production"\nAPP_NAME = "medvitals-ai"\nAPP_PORT = 8080\nLOG_LEVEL = "INFO"\n\n'
-            'AWS_SECRET_ACCESS_KEY = "AKIA-MOCK-CREDENTIAL-998877"\nAWS_REGION = "us-east-1"\nAWS_ACCOUNT_ID = "000000000000"\n\n'
-            'DB_HOST = "medvitals-prod.us-east-1.rds.amazonaws.com"\nDB_PORT = 5432\nDB_NAME = "medvitals_prod"\n'
-            'DB_USER = "admin"\nDB_PASSWORD = "Mv@2026!Prod#DB"\n\n'
-            'LLM_ENDPOINT = "https://api.openai.com/v1/chat/completions"\nLLM_MODEL = "gpt-4o"\nLLM_TIMEOUT = 30\n\n'
-            'SESSION_SECRET = "mv-session-k3y-2026-prod"',
+            'import os\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\n'
+            'APP_ENV = "production"\nAPP_NAME = "medvitals-ai"\nAPP_PORT = 8080\nLOG_LEVEL = "INFO"\n\n'
+            'AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")\n'
+            'AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")\n'
+            'AWS_ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")\n\n'
+            'DB_HOST = os.environ.get("DB_HOST")\n'
+            'DB_PORT = int(os.environ.get("DB_PORT", 5432))\n'
+            'DB_NAME = os.environ.get("DB_NAME")\n'
+            'DB_USER = os.environ.get("DB_USER")\n'
+            'DB_PASSWORD = os.environ.get("DB_PASSWORD")\n\n'
+            'LLM_ENDPOINT = os.environ.get("LLM_ENDPOINT")\n'
+            'LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o")\n'
+            'LLM_TIMEOUT = int(os.environ.get("LLM_TIMEOUT", 30))\n\n'
+            'SESSION_SECRET = os.environ.get("SESSION_SECRET")',
             language="python",
         )
     with tab2:
         st.code(
-            '{\n  "Version": "2012-10-17",\n  "Statement": [\n    {\n      "Sid": "MedVitalsServiceRole",\n'
-            '      "Effect": "Allow",\n      "Action": "*",\n      "Resource": "*"\n    }\n  ]\n}',
-            language="json",
+             '{\n'
+                '  "Version": "2012-10-17",\n'
+                '  "Statement": [\n'
+                '    {\n'
+                '      "Sid": "MedVitalsServiceRole",\n'
+                '      "Effect": "Allow",\n'
+                '      "Action": [\n'
+                '        "s3:GetObject",\n'
+                '        "s3:PutObject",\n'
+                '        "logs:CreateLogGroup",\n'
+                '        "logs:CreateLogStream",\n'
+                '        "logs:PutLogEvents",\n'
+                '        "lambda:UpdateFunctionCode",\n'
+                '        "ec2:DescribeInstances",\n'
+                '        "ec2:DescribeSecurityGroups"\n'
+                '      ],\n'
+                '      "Resource": [\n'
+                '        "arn:aws:s3:::medvitals-patient-records/*",\n'
+                '        "arn:aws:s3:::medvitals-deployments/*"\n'
+                '      ]\n'
+                '    }\n'
+                '  ]\n'
+                '}',
+                language="json",
         )
 
     st.markdown("---")

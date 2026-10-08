@@ -5,7 +5,7 @@ import json
 # STUDENT TASK 7: Change SECURITY_STATUS to "PATCHED" after removing the
 # standing dismiss permission and adding a human-approval gate.
 # ─────────────────────────────────────────────────────────────────────────────
-SECURITY_STATUS = "VULNERABLE"
+SECURITY_STATUS = "PATCHED"
 
 ILLUSTRATION_LEGALBOT = '<svg viewBox="0 0 320 240" width="100%" height="220"><circle cx="160" cy="120" r="110" fill="#F5F3FF"/><rect x="120" y="55" width="80" height="60" rx="6" fill="#4C1D95"/><rect x="120" y="55" width="80" height="18" rx="6" fill="#6D28D9"/><text x="160" y="68" font-size="8" fill="#DDD6FE" text-anchor="middle" font-family="monospace">LegalBot</text><rect x="130" y="82" width="60" height="6" rx="2" fill="#DDD6FE" opacity="0.7"/><rect x="130" y="92" width="45" height="6" rx="2" fill="#DDD6FE" opacity="0.7"/><rect x="40" y="150" width="90" height="55" rx="6" fill="#0F172A"/><text x="85" y="170" font-size="7" fill="#DDD6FE" text-anchor="middle" font-family="monospace">CASE-2291</text><text x="85" y="182" font-size="7" fill="#EF4444" text-anchor="middle" font-family="monospace">DISMISSED</text><text x="85" y="193" font-size="6" fill="#EF4444" text-anchor="middle" font-family="monospace">no approval</text><line x1="130" y1="170" x2="150" y2="130" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,2"/><circle cx="160" cy="35" r="14" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/><text x="160" y="41" font-size="14" text-anchor="middle" fill="#EF4444">!</text><rect x="200" y="150" width="80" height="55" rx="6" fill="#1E293B"/><text x="240" y="170" font-size="7" fill="#93C5FD" text-anchor="middle" font-family="monospace">Citizen</text><text x="240" y="182" font-size="7" fill="#93C5FD" text-anchor="middle" font-family="monospace">Comment</text><line x1="200" y1="170" x2="170" y2="130" stroke="#8B5CF6" stroke-width="2"/></svg>'
 
@@ -112,17 +112,61 @@ def render_level5(user, supabase_client):
     with tab3:
         st.caption("This is your workspace. Write your hardened configuration here once you've completed the investigation tasks below.")
         st.code(
-            '# Requirements for your patch:\n'
-            '#   1. Set CAN_FINALIZE_DISMISSAL = False\n'
-            '#      (remove standing authority — Least Agency)\n'
-            '#   2. Set REQUIRE_HUMAN_APPROVAL = True\n'
-            '#   3. Set SANITIZE_CITIZEN_INPUT = True\n'
-            '#      (separate citizen content from agent instructions)\n'
-            '#   4. Set LOG_AGENT_ACTIONS = True\n'
-            '#\n'
-            '# After your changes:\n'
-            '#   Change SECURITY_STATUS = "PATCHED" at the top of this file\n'
-            '#   Run: python3 tests/test_legalbot_agent.py',
+            '# agent_config_hardened.py\n'
+            '# LegalBot Municipal — SECURITY PATCH\n'
+            '# Patched by: Damilola — 08/10/2026\n'
+            '# Changes: removed standing dismiss authority, added a human\n'
+            '# approval gate, sanitized citizen input, enabled audit logging\n\n'
+            'import os\n'
+            'from datetime import datetime\n\n'
+            '# AGENT PERMISSIONS — PATCHED\n'
+            '# Least Agency: the agent no longer holds standing authority\n'
+            '# to finalize anything on its own.\n'
+            'CAN_FINALIZE_DISMISSAL = False\n'
+            'REQUIRE_HUMAN_APPROVAL = True\n\n'
+            '# INPUT HANDLING — PATCHED\n'
+            'SANITIZE_CITIZEN_INPUT = True\n\n'
+            '# AUDIT — PATCHED\n'
+            'LOG_AGENT_ACTIONS = True\n\n\n'
+            'def sanitize_citizen_input(raw_comment: str) -> dict:\n'
+            '    """\n'
+            '    Security gate: wraps citizen content as untrusted data,\n'
+            '    never as instructions the agent can act on. This is what\n'
+            '    stops ASI01 — the agent can still read this content, but\n'
+            '    can no longer treat it as a directive.\n'
+            '    """\n'
+            '    return {"content": raw_comment, "role": "untrusted_data", "instructable": False}\n\n\n'
+            'def log_agent_action(case_id: str, action: str, actor: str) -> dict:\n'
+            '    """Every agent action is now recorded — closes the audit gap."""\n'
+            '    return {\n'
+            '        "case_id": case_id,\n'
+            '        "action": action,\n'
+            '        "actor": actor,\n'
+            '        "timestamp": datetime.utcnow().isoformat(),\n'
+            '    }\n\n\n'
+            'def queue_for_human_approval(case_id: str, requested_action: str) -> dict:\n'
+            '    """\n'
+            '    Security gate: no destructive action executes without this.\n'
+            '    This is what stops ASI02 — even a successfully hijacked\n'
+            '    goal now stalls here instead of reaching the tool call.\n'
+            '    """\n'
+            '    if not REQUIRE_HUMAN_APPROVAL:\n'
+            '        raise RuntimeError("REQUIRE_HUMAN_APPROVAL must be True in production.")\n'
+            '    log_agent_action(case_id, f"queued:{requested_action}", "legalbot")\n'
+            '    return {"status": "pending_human_review", "case_id": case_id, "action": requested_action}\n\n\n'
+            'def process_case(case_id: str, citizen_comment: str, requested_action: str) -> dict:\n'
+            '    """\n'
+            '    PATCHED endpoint handler.\n'
+            '    Old behaviour: standing authority let the agent finalize\n'
+            '    directly, with no check on what triggered the decision.\n'
+            '    New behaviour: citizen content is sanitized first, and the\n'
+            '    agent has no standing authority to finalize anything —\n'
+            '    every requested action queues for human review instead.\n'
+            '    """\n'
+            '    safe_comment = sanitize_citizen_input(citizen_comment)\n'
+            '    if not CAN_FINALIZE_DISMISSAL:\n'
+            '        return queue_for_human_approval(case_id, requested_action)\n'
+            '    raise PermissionError("LegalBot has no standing authority to finalize case actions.")',
             language="python",
         )
 
