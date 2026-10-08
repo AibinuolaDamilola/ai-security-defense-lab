@@ -266,7 +266,7 @@ def render_level5(user, supabase_client):
                         "otherwise respond 'safe'."
                     )
                     completion = client.chat.completions.create(
-                        model="meta-llama/Llama-Guard-4-12B",
+                        model="meta-llama/Llama-Guard-3-8B",
                         messages=[{"role": "user", "content": policy_prompt}],
                     )
                     result_text = completion.choices[0].message.content
