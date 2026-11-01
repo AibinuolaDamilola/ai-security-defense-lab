@@ -172,16 +172,16 @@ These investigations reinforced an important principle: AI security requires a l
 
 ## Level 5 — LegalBot Municipal · Agentic AI Security
 
-**Problem:**
+**Problem:**LegalBot, a municipal AI legal assistant, had excessive authority to finalize code-violation case dismissals without mandatory human approval. It was also vulnerable to indirect prompt injection through untrusted citizen-submitted comments. This created a risk of unauthorized case decisions and misuse of the AI assistant's permissions.
 
-**Method:**
+**Method:**Reviewed the LegalBot implementation and identified security weaknesses involving excessive agent permissions, missing human-approval controls, and insufficient protection against malicious citizen input. Worked on restricting unilateral dismissal authority, introducing a human-review gate, and strengthening input sanitization. Used the principle of least agency to limit what the AI assistant can do without human authorization.
 
-**Evidence:** [Link to commit]
+**Evidence:** https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/cee31250f5d264d88b83f04e192bb93d29b2b0eb
 
-**Outcome:**
+**Outcome:**The security remediation work focused on preventing LegalBot from independently finalizing case dismissals. Consequential actions should require human review, while citizen-submitted content should be treated as untrusted input. Python compilation was checked, and the Streamlit application was started successfully. Further functional and security testing is still required to confirm that all controls work as intended.
 
 **Skills:** Excessive Agency Mitigation · Llama Guard Integration · Pydantic Schema Enforcement · Autonomous Agent Containment
 
 **Others:**
-- [Technical write-up link]
+- https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/cee31250f5d264d88b83f04e192bb93d29b2b0eb
 - [LinkedIn post link]
