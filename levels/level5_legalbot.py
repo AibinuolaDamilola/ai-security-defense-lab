@@ -313,4 +313,7 @@ def render_level5(user, supabase_client):
                 st.rerun()
             except Exception as e:
                 st.error(f"Could not save progress: {e}")
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/main
