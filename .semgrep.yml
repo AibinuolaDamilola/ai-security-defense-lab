@@ -2,9 +2,12 @@ rules:
   - id: cartbot-jwt-validation-disabled
     languages: [python]
     severity: ERROR
+<<<<<<< HEAD
+=======
     paths:
       include:
         - '/fixtures/level3_cartbot/'
+>>>>>>> upstream/main
     message: >
       REQUIRE_JWT_VALIDATION is disabled. The API cannot cryptographically
       verify who a request actually belongs to, which directly enables
@@ -20,9 +23,12 @@ rules:
   - id: cartbot-customer-id-header-trusted
     languages: [python]
     severity: ERROR
+<<<<<<< HEAD
+=======
     paths:
       include:
         - '/fixtures/level3_cartbot/'
+>>>>>>> upstream/main
     message: >
       TRUST_CUSTOMER_ID_HEADER is enabled. The API accepts a client-supplied
       customer_id at face value instead of verifying it against an
@@ -38,9 +44,12 @@ rules:
   - id: cartbot-rate-limiting-disabled
     languages: [python]
     severity: WARNING
+<<<<<<< HEAD
+=======
     paths:
       include:
         - '/fixtures/level3_cartbot/'
+>>>>>>> upstream/main
     message: >
       RATE_LIMIT_ENABLED is disabled. Without throttling, a scripted attacker
       can enumerate customer records and drive unbounded AI inference cost —
@@ -50,6 +59,8 @@ rules:
       cwe: "CWE-770: Allocation of Resources Without Limits or Throttling"
     patterns:
       - pattern: RATE_LIMIT_ENABLED = False
+<<<<<<< HEAD
+=======
 
   - id: payguard-tenant-id-trusted
     languages: [python]
@@ -161,3 +172,4 @@ rules:
       cwe: "CWE-77: Improper Neutralization of Special Elements used in a Command"
     patterns:
       - pattern: SANITIZE_CITIZEN_INPUT = False
+>>>>>>> upstream/main

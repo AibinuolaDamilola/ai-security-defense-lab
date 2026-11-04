@@ -348,7 +348,6 @@ def render_hub(profile, progress):
         if st.button("Sign Out", key="hub_signout_main", use_container_width=True):
             do_sign_out()
 
-
 def render_level_view(view_name, profile, progress):
     from levels.level1_medvitals import render_level1
     from levels.level2_dataforge import render_level2
@@ -403,6 +402,7 @@ def render_level_view(view_name, profile, progress):
 
 
 # ── Main router ────────────────────────────────────────────────────────────────
+ 
 if st.session_state.user is None:
     render_auth_screen()
 else:

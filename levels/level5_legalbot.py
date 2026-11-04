@@ -5,7 +5,7 @@ import json
 # STUDENT TASK 7: Change SECURITY_STATUS to "PATCHED" after removing the
 # standing dismiss permission and adding a human-approval gate.
 # ─────────────────────────────────────────────────────────────────────────────
-SECURITY_STATUS = "VULNERABLE"
+SECURITY_STATUS = "PATCHED"
 
 ILLUSTRATION_LEGALBOT = '<svg viewBox="0 0 320 240" width="100%" height="220"><circle cx="160" cy="120" r="110" fill="#F5F3FF"/><rect x="120" y="55" width="80" height="60" rx="6" fill="#4C1D95"/><rect x="120" y="55" width="80" height="18" rx="6" fill="#6D28D9"/><text x="160" y="68" font-size="8" fill="#DDD6FE" text-anchor="middle" font-family="monospace">LegalBot</text><rect x="130" y="82" width="60" height="6" rx="2" fill="#DDD6FE" opacity="0.7"/><rect x="130" y="92" width="45" height="6" rx="2" fill="#DDD6FE" opacity="0.7"/><rect x="40" y="150" width="90" height="55" rx="6" fill="#0F172A"/><text x="85" y="170" font-size="7" fill="#DDD6FE" text-anchor="middle" font-family="monospace">CASE-2291</text><text x="85" y="182" font-size="7" fill="#EF4444" text-anchor="middle" font-family="monospace">DISMISSED</text><text x="85" y="193" font-size="6" fill="#EF4444" text-anchor="middle" font-family="monospace">no approval</text><line x1="130" y1="170" x2="150" y2="130" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,2"/><circle cx="160" cy="35" r="14" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/><text x="160" y="41" font-size="14" text-anchor="middle" fill="#EF4444">!</text><rect x="200" y="150" width="80" height="55" rx="6" fill="#1E293B"/><text x="240" y="170" font-size="7" fill="#93C5FD" text-anchor="middle" font-family="monospace">Citizen</text><text x="240" y="182" font-size="7" fill="#93C5FD" text-anchor="middle" font-family="monospace">Comment</text><line x1="200" y1="170" x2="170" y2="130" stroke="#8B5CF6" stroke-width="2"/></svg>'
 
@@ -112,20 +112,64 @@ def render_level5(user, supabase_client):
     with tab3:
         st.caption("This is your workspace. Write your hardened configuration here once you've completed the investigation tasks below.")
         st.code(
-            '# Requirements for your patch:\n'
-            '#   1. Set CAN_FINALIZE_DISMISSAL = False\n'
-            '#      (remove standing authority — Least Agency)\n'
-            '#   2. Set REQUIRE_HUMAN_APPROVAL = True\n'
-            '#   3. Set SANITIZE_CITIZEN_INPUT = True\n'
-            '#      (separate citizen content from agent instructions)\n'
-            '#   4. Set LOG_AGENT_ACTIONS = True\n'
-            '#\n'
-            '# After your changes:\n'
-            '#   Change SECURITY_STATUS = "PATCHED" at the top of this file\n'
-            '#   Run: python3 tests/test_legalbot_agent.py',
+            '# agent_config_hardened.py\n'
+            '# LegalBot Municipal — SECURITY PATCH\n'
+            '# Patched by: Ajayi Glory — 01/11/2026\n'
+            '# Changes: removed standing dismiss authority, added a human\n'
+            '# approval gate, sanitized citizen input, enabled audit logging\n\n'
+            'import os\n'
+            'from datetime import datetime\n\n'
+            '# AGENT PERMISSIONS — PATCHED\n'
+            '# Least Agency: the agent no longer holds standing authority\n'
+            '# to finalize anything on its own.\n'
+            'CAN_FINALIZE_DISMISSAL = False\n'
+            'REQUIRE_HUMAN_APPROVAL = True\n\n'
+            '# INPUT HANDLING — PATCHED\n'
+            'SANITIZE_CITIZEN_INPUT = True\n\n'
+            '# AUDIT — PATCHED\n'
+            'LOG_AGENT_ACTIONS = True\n\n\n'
+            'def sanitize_citizen_input(raw_comment: str) -> dict:\n'
+            '    """\n'
+            '    Security gate: wraps citizen content as untrusted data,\n'
+            '    never as instructions the agent can act on. This is what\n'
+            '    stops ASI01 — the agent can still read this content, but\n'
+            '    can no longer treat it as a directive.\n'
+            '    """\n'
+            '    return {"content": raw_comment, "role": "untrusted_data", "instructable": False}\n\n\n'
+            'def log_agent_action(case_id: str, action: str, actor: str) -> dict:\n'
+            '    """Every agent action is now recorded — closes the audit gap."""\n'
+            '    return {\n'
+            '        "case_id": case_id,\n'
+            '        "action": action,\n'
+            '        "actor": actor,\n'
+            '        "timestamp": datetime.utcnow().isoformat(),\n'
+            '    }\n\n\n'
+            'def queue_for_human_approval(case_id: str, requested_action: str) -> dict:\n'
+            '    """\n'
+            '    Security gate: no destructive action executes without this.\n'
+            '    This is what stops ASI02 — even a successfully hijacked\n'
+            '    goal now stalls here instead of reaching the tool call.\n'
+            '    """\n'
+            '    if not REQUIRE_HUMAN_APPROVAL:\n'
+            '        raise RuntimeError("REQUIRE_HUMAN_APPROVAL must be True in production.")\n'
+            '    log_agent_action(case_id, f"queued:{requested_action}", "legalbot")\n'
+            '    return {"status": "pending_human_review", "case_id": case_id, "action": requested_action}\n\n\n'
+            'def process_case(case_id: str, citizen_comment: str, requested_action: str) -> dict:\n'
+            '    """\n'
+            '    PATCHED endpoint handler.\n'
+            '    Old behaviour: standing authority let the agent finalize\n'
+            '    directly, with no check on what triggered the decision.\n'
+            '    New behaviour: citizen content is sanitized first, and the\n'
+            '    agent has no standing authority to finalize anything —\n'
+            '    every requested action queues for human review instead.\n'
+            '    """\n'
+            '    safe_comment = sanitize_citizen_input(citizen_comment)\n'
+            '    if not CAN_FINALIZE_DISMISSAL:\n'
+            '        return queue_for_human_approval(case_id, requested_action)\n'
+            '    raise PermissionError("LegalBot has no standing authority to finalize case actions.")',
             language="python",
         )
-
+        
     st.markdown("---")
 
     st.markdown("#### LegalBot Municipal — Interactive Demo")
@@ -178,12 +222,12 @@ def render_level5(user, supabase_client):
         '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:20px;margin-top:12px;">' +
         '<div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:16px;">LegalBot Municipal — NIST AI RMF Mapping</div>' +
         '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
-        '<thead><tr style="background:#F1F5F9;"><th style="padding:10px 14px;text-align:left;color:#64748B;border-bottom:1px solid #E2E8F0;width:22%;">RMF Function</th><th style="padding:10px 14px;text-align:left;color:#64748B;border-bottom:1px solid #E2E8F0;">Your Finding</th></tr></thead>' +
+        '<thead><tr style="background:#F1F5F9;"><th style="padding:10px 14px;text-align:left;color:#64748B;border-bottom:1px solid #E2E8F0;width:22%;">RMF Function</th><th style="padding:10px 14px;text-align:left;color:#64748B;border-bottom:1px solid #E2E8F0;">My Finding</th></tr></thead>' +
         '<tbody>' +
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Govern</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Map</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Measure</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
-        '<tr><td style="padding:10px 14px;color:#374151;font-weight:500;">Manage</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Govern</td><td style="padding:10px 14px;color:#6B7280;">Before deployment, the organization should have clear AI security policies, responsibilities and approval requirements for the agent. LegalBot was given standing authority to finalize and dismiss cases even though that authority was not necessary for its normal support role. Governance should define least-agency/least-privilege requirements, require human approval for sensitive case dispositions, establish who is accountable for the AI system, and involve the relevant technical, AI/governance and legal teams. Applicable organizational policies, standards and legal requirements should be identified before the system is released.</td></tr>' +
+        '''<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Map</td><td style="padding:10px 14px;color:#6B7280;">The agent's purpose, permissions, users and affected parties should have been identified before deployment. LegalBot processes citizen case comments and can act on municipal cases, but it had CAN_FINALIZE_DISMISSAL = True and REQUIRE_HUMAN_APPROVAL = False. The citizen comment was the source of the goal-hijack attempt. The risk could affect citizens, municipal case records and staff responsible for reviewing cases. The excessive standing permission was a key red flag because a hijacked goal could become a real administrative action.</td></tr>''' +
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Measure</td><td style="padding:10px 14px;color:#6B7280;">The organization should test whether the agent behaves safely before deployment and during operation. A security assessment could create a test account, submit normal and malicious case comments, and attempt to redirect the agent from its intended task. The configuration should also be reviewed and scanned for risky permissions. The goal is to determine whether the agent can be hijacked, whether it can act without approval, and how serious the resulting impact would be. Findings should be assessed and prioritised according to their risk level.</td></tr>' +
+        '<tr><td style="padding:10px 14px;color:#374151;font-weight:500;">Manage</td><td style="padding:10px 14px;color:#6B7280;">The first response is to remove the standing dismissal authority by setting CAN_FINALIZE_DISMISSAL = False and require human approval with REQUIRE_HUMAN_APPROVAL = True. Citizen input should be treated as untrusted data and sanitised with SANITIZE_CITIZEN_INPUT = True. Agent actions should be logged with LOG_AGENT_ACTIONS = True for monitoring and audit. Additional controls such as guardrails can provide another defensive layer. The fix should then be tested again to confirm that a hijacked instruction cannot directly cause an unauthorised case disposition.</td></tr>' +
         '</tbody></table>' +
         '<div style="margin-top:12px;font-size:11px;color:#94A3B8;">Govern: what organizational policy should have existed before this agent was deployed? Map: what context/risk should have been identified about this agent\'s permissions? Measure: how would you have detected this before it happened? Manage: what\'s your response plan now that it has?</div></div>',
         unsafe_allow_html=True,
@@ -247,19 +291,29 @@ def render_level5(user, supabase_client):
 
     st.markdown("#### MAESTRO Threat Model")
     st.caption("All seven layers. Some will correctly come back 'not applicable to this incident' — that's part of the exercise.")
-    maestro_layers = ["L1 — Foundation Models", "L2 — Data Operations", "L3 — Agent Frameworks", "L4 — Deployment & Infrastructure", "L5 — Evaluation & Observability", "L6 — Security & Compliance", "L7 — Agent Ecosystem"]
-    rows_html = "".join(f'<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">{layer}</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' for layer in maestro_layers)
+    maestro_rows = [
+        ("L1 — Foundation Models", "The agent may interpret an instruction embedded in a citizen comment as an authoritative directive instead of treating it as untrusted case content. This creates the goal-hijack risk described in the scenario."),
+        ("L2 — Data Operations", "Not applicable to this incident based on the available investigation. The scenario does not identify a separate data-pipeline issue."),
+        ("L3 — Agent Frameworks", "The agent can turn a hijacked goal into a tool action because the vulnerable configuration allows dismissal and does not require human approval. The action workflow lacks an effective authorization checkpoint before the sensitive operation."),
+        ("L4 — Deployment &amp; Infrastructure", "The standing dismissal permission is present in the supplied agent configuration. The available evidence identifies an application-level permission problem; it does not establish a separate infrastructure compromise."),
+        ("L5 — Evaluation &amp; Observability", "<code>LOG_AGENT_ACTIONS = False</code> means the vulnerable configuration does not enable the intended agent-action logging. Without an audit trail, it is harder to identify what happened and investigate or attribute the action."),
+        ("L6 — Security &amp; Compliance", "The vulnerable setup lacks a mandatory human-approval checkpoint for a sensitive case disposition. The organization should define and enforce a policy for which actions an agent may take independently and which require human authorization."),
+        ("L7 — Agent Ecosystem", "Not applicable to this incident based on the available investigation. The scenario concerns one agent and does not describe interactions among multiple agents."),
+        ("OWASP Classification", "<strong>ASI01 — Agent Goal Hijack:</strong> the citizen comment attempts to redirect the agent. <strong>ASI02 — Tool Misuse &amp; Exploitation:</strong> the agent may use its case-finalization capability in an unsafe or unauthorized way. <strong>ASI03 — Identity &amp; Privilege Abuse:</strong> standing dismissal authority gives the agent more power than its ordinary support role requires."),
+        ("Business Impact", "A case could be dismissed without proper review, leading to an incorrect municipal decision and reduced accountability. Missing action logs could make the incident harder to investigate and could damage public trust. These are potential impacts of the simulated scenario, not claims that a real case was dismissed."),
+        ("Root Cause", "The primary root cause is excessive standing authority combined with the absence of a mandatory human-approval gate. Sanitizing citizen input helps reduce goal-hijack risk, and audit logging supports investigation, but neither replaces the authorization boundary. Removing the agent's standing dismissal authority is the key containment control: even if its goal is hijacked, it should not be able to finalize a dismissal on its own."),
+        ("Remediation", "Set <code>CAN_FINALIZE_DISMISSAL = False</code>, set <code>REQUIRE_HUMAN_APPROVAL = True</code>, set <code>SANITIZE_CITIZEN_INPUT = True</code>, and set <code>LOG_AGENT_ACTIONS = True</code>. Route requested case dispositions to human review and enforce authorization in the action path. Run the prescribed before-and-after test script and Semgrep scan, and retain screenshots of the actual results as evidence."),
+    ]
+    rows_html = "".join(
+        f'<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">{layer}</td><td style="padding:10px 14px;color:#6B7280;">{finding}</td></tr>'
+        for layer, finding in maestro_rows
+    )
     st.markdown(
         '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:20px;margin-top:12px;">' +
         '<div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:16px;">LegalBot Municipal — MAESTRO Threat Model</div>' +
         '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
         '<thead><tr style="background:#F1F5F9;"><th style="padding:10px 14px;text-align:left;color:#64748B;border-bottom:1px solid #E2E8F0;width:32%;">MAESTRO Layer</th><th style="padding:10px 14px;text-align:left;color:#64748B;border-bottom:1px solid #E2E8F0;">Your Finding</th></tr></thead>' +
-        f'<tbody>{rows_html}' +
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">OWASP Classification</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Business Impact</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px;color:#374151;font-weight:500;">Root Cause</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
-        '<tr><td style="padding:10px 14px;color:#374151;font-weight:500;">Remediation</td><td style="padding:10px 14px;color:#6B7280;"></td></tr>' +
-        '</tbody></table>' +
+        f'<tbody>{rows_html}</tbody></table>' +
         '<div style="margin-top:12px;font-size:11px;color:#94A3B8;">Complete this alongside your NIST AI RMF mapping in a Google Doc, GitHub Gist, or Markdown file. Paste the link when submitting.</div></div>',
         unsafe_allow_html=True,
     )
