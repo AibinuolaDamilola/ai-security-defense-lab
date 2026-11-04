@@ -184,4 +184,4 @@ These investigations reinforced an important principle: AI security requires a l
 
 **Others:**
 - https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/cee31250f5d264d88b83f04e192bb93d29b2b0eb
-- [LinkedIn post link]
+- https://lnkd.in/p/eGgCHyX9
